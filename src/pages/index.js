@@ -4,7 +4,8 @@ import { Inter } from "@next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
-import Layout from "../components/Layout";
+import Layout from "../components/layout";
+
 export default function Home({ pokemon }) {
   return (
     <Layout title="Who's that Pokemon">
