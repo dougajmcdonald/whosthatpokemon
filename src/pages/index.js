@@ -8,7 +8,7 @@ import Layout from "../components/Layout";
 export default function Home({ pokemon }) {
   return (
     <Layout title="Who's that Pokemon">
-      <h1 className="text-4xl mb-8 text-center">Who's that Pokemon</h1>
+      <h1 className="text-4xl mb-8 text-center">Who&apos;s that Pokemon</h1>
       <ul>
         {pokemon.map((item, index) => {
           return (
