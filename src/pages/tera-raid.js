@@ -50,30 +50,53 @@ export default function TeraRaid({ types }) {
       {teraType && (
         <div>
           <section>
-            <p>Your attacking {teraType.name}</p>
-            <section className="bg-green-200">
-              <p>{teraType.name} takes double damage from</p>
-              <ul>
-                {teraType.damage_relations.double_damage_from.map((x) => (
-                  <li key={x.name}>{x.name}</li>
-                ))}
-              </ul>
-            </section>
-            <section className="bg-red-200">
-              <p>{teraType.name} takes half damage from</p>
-              <ul>
-                {teraType.damage_relations.half_damage_from.map((x) => (
-                  <li key={x.name}>{x.name}</li>
-                ))}
-              </ul>
-            </section>
-            <section className="bg-red-500">
-              <p>{teraType.name} takes no damage from</p>
-              <ul>
-                {teraType.damage_relations.no_damage_from.map((x) => (
-                  <li key={x.name}>{x.name}</li>
-                ))}
-              </ul>
+            <p>You&apos;re attacking {teraType.name}</p>
+            <section className="grid grid-cols-3">
+              <section className="bg-green-200 p-2 m-2 rounded-md">
+                <p>{teraType.name} takes double damage from</p>
+                <ul>
+                  {teraType.damage_relations.double_damage_from.map((x) => (
+                    <li key={x.name}>
+                      <Image
+                        src={`/img/${x.name}_type_banner.png`}
+                        alt={x.name}
+                        width="133"
+                        height="32"
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </section>
+              <section className="bg-red-200 m-2 p-2 rounded-md">
+                <p>{teraType.name} takes half damage from</p>
+                <ul>
+                  {teraType.damage_relations.half_damage_from.map((x) => (
+                    <li key={x.name}>
+                      <Image
+                        src={`/img/${x.name}_type_banner.png`}
+                        alt={x.name}
+                        width="133"
+                        height="32"
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </section>
+              <section className="bg-red-500 m-2 p-2 rounded-md">
+                <p>{teraType.name} takes no damage from</p>
+                <ul>
+                  {teraType.damage_relations.no_damage_from.map((x) => (
+                    <li key={x.name}>
+                      <Image
+                        src={`/img/${x.name}_type_banner.png`}
+                        alt={x.name}
+                        width="133"
+                        height="32"
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </section>
             </section>
           </section>
           <section>
