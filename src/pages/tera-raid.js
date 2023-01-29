@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Inter } from "@next/font/google";
 import Pokedex from "pokedex-promise-v2";
 import React from "react";
+import { filterNameToValidPokemon } from "../data/filters";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,12 +16,37 @@ export default function TeraRaid({ types }) {
     setTeraType(type);
   };
 
-  console.log(types[0]);
+  //console.log(types[0]);
 
   return (
     <Layout title="Tera raid helper">
       <h1 className="text-4xl mb-8 text-center">Tera raid helper</h1>
-      <p>What tera type is the Pokemon you&apos;re attacking?</p>
+      <section className="p-4 rounded-md bg-slate-200">
+        <p className="font-bold">
+          What tera type is the Pokemon you&apos;re attacking?
+        </p>
+        <ul className="grid grid-cols-6">
+          {types.map((type) => {
+            return (
+              <li key={type.name} className="inline-block">
+                <button
+                  className="p-2 border rounded-md m-2 hover:bg-slate-300"
+                  onClick={() => handleClick(type)}
+                >
+                  <Image
+                    src={`/img/${type.name}_tera.png`}
+                    alt={type.name}
+                    width="48"
+                    height="48"
+                  />
+                  {type.name}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+
       {teraType && (
         <div>
           <section>
@@ -60,24 +86,16 @@ export default function TeraRaid({ types }) {
                     .includes(x.name)
                 )
                 .map((z) =>
-                  z.pokemon.map((p) => (
-                    <li key={p.pokemon.name}>{p.pokemon.name}</li>
-                  ))
+                  z.pokemon
+                    .map((x) => x.pokemon.name)
+                    .filter(filterNameToValidPokemon)
+                    .map((name) => <li key={name}>{name}</li>)
                 )}
             </ul>
           </section>
         </div>
       )}
       <hr />
-      <ul>
-        {types.map((type) => {
-          return (
-            <li key={type.name}>
-              <button onClick={() => handleClick(type)}>{type.name}</button>
-            </li>
-          );
-        })}
-      </ul>
     </Layout>
   );
 }
@@ -88,7 +106,7 @@ export const getStaticProps = async () => {
   const { results } = await P.getTypesList();
   const typeData = await Promise.all(
     results
-      .filter((type) => type.name !== "unknown" || type.name !== "shadow")
+      .filter((type) => type.name !== "unknown" && type.name !== "shadow")
       .map(async (r) => {
         //console.log(r);
         const typeInfo = await P.getTypeByName(r.name);
