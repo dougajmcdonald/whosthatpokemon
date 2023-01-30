@@ -19,10 +19,36 @@ export default function TeraRaid({ types }) {
   const [targetPokemon, setTargetPokemon] = React.useState();
   const [validMoves, setValidMoves] = React.useState();
   const [moveTypeAccess, setMoveTypeAccess] = React.useState();
-  //const [targetPokemonImage, setTargetPokemon] = React.useState();
+  const [statAnalysis, setStatAnalysis] = React.useState();
 
   const handleClick = (type) => {
     setTeraType(type);
+  };
+
+  const physicalSpecialAnalysis = (pokemon) => {
+    const stats = pokemon.stats.map((s) => ({
+      key: s.stat.name,
+      base: s.base_stat,
+    }));
+
+    //console.log(stats);
+
+    const statMap = stats.map((s) => ({ [s.key]: s.base }));
+
+    const statObj = Object.assign({}, ...statMap);
+
+    //console.log(statObj);
+
+    const statAnalysis = {
+      strongestAttackStat:
+        statObj.attack > statObj["special-attack"] ? "physical" : "special",
+      strongestDefenseStat:
+        statObj.defense > statObj["special-defense"] ? "physical" : "special",
+      ...statObj,
+    };
+
+    console.log(statAnalysis);
+    setStatAnalysis(statAnalysis);
   };
 
   const handleSelectionChange = async (pokemonName) => {
@@ -36,6 +62,8 @@ export default function TeraRaid({ types }) {
       };
 
       setTargetPokemon(pokemonWithImage);
+
+      physicalSpecialAnalysis(pokemonWithImage);
 
       //moves
       //console.log("valid moves", getSVMoves(selectedPokemon.moves));
@@ -53,15 +81,20 @@ export default function TeraRaid({ types }) {
         .map((m) => m.type.name)
         .filter((item, index, arr) => arr.indexOf(item) === index);
 
-      setMoveTypeAccess(moveTypes);
-      //damagingMoves.map(m => m.type.name)
+      const groupMoveByType = damagingMoves.reduce((group, move) => {
+        const {
+          type: { name },
+        } = move;
+        group[name] = group[name] ?? [];
+        group[name].push(move);
+        return group;
+      }, {});
 
-      // const moveData = await validMoves.forEach(
-      //   async (m) => await getMoveData(m.name)
-      // );
-      //console.log(moveData);
-      //console.log(damagingMoves);
-      console.log(moveTypes);
+      console.log(groupMoveByType);
+
+      setMoveTypeAccess(moveTypes);
+
+      console.log(damagingMoves);
     }
   };
 
@@ -77,7 +110,7 @@ export default function TeraRaid({ types }) {
     return `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${paddedId}.png`;
   };
 
-  const getMoveData = async (name) => await P.getMoveByName(name);
+  //const getMoveData = async (name) => await P.getMoveByName(name);
 
   const getSVMoves = (moves) =>
     moves
@@ -89,85 +122,89 @@ export default function TeraRaid({ types }) {
       )
       .map((m) => m.move);
 
+  const handleReset = (e) => {
+    setTargetPokemon(null);
+    setTeraType(null);
+  };
+
   return (
     <Layout title="Tera raid helper">
       <h1 className="text-4xl mb-8 text-center">Tera raid helper</h1>
-      <section className="p-4 rounded-md bg-slate-200">
-        <p className="font-bold">
-          What tera type is the Pokemon you&apos;re attacking?
-        </p>
-        <ul className="grid grid-cols-6">
-          {types.map((type) => {
-            return (
-              <li key={type.name} className="inline-block">
-                <Button onClick={() => handleClick(type)}>
-                  <Image
-                    src={`/img/${type.name}_tera.png`}
-                    alt={type.name}
-                    width="48"
-                    height="48"
-                  />
-                  {type.name}
-                </Button>
-              </li>
-            );
-          })}
-        </ul>
-        <p className="font-bold">Which Pokemon is it?</p>
+      <section className="p-4 rounded-md bg-slate-200 mb-4">
         <AutoComplete
-          label="Search"
+          label="Which Pokemon is the raid for?"
           defaultItems={svPokedex}
           onSelectionChange={handleSelectionChange}
         >
           {(item) => <Item>{item.name}</Item>}
-
-          {/* <Section title="Companies">
-            <Item>Chatterbridge</Item>
-            <Item>Tagchat</Item>
-            <Item>Yambee</Item>
-            <Item>Photobug</Item>
-            <Item>Livepath</Item>
-          </Section>
-          <Section title="People">
-            <Item>Theodor Dawber</Item>
-            <Item>Dwight Stollenberg</Item>
-            <Item>Maddalena Prettjohn</Item>
-            <Item>Maureen Fassan</Item>
-            <Item>Abbie Binyon</Item>
-          </Section> */}
         </AutoComplete>
       </section>
-
-      {teraType && (
+      {targetPokemon && (
+        <section className="p-4 rounded-md bg-slate-200">
+          <p className="font-bold mb-2">
+            What tera type is the Pokemon you&apos;re attacking?
+          </p>
+          <ul className="grid grid-cols-6">
+            {types.map((type) => {
+              return (
+                <li key={type.name} className="inline-block">
+                  <Button onPress={() => handleClick(type)}>
+                    <Image
+                      src={`/img/${type.name}_tera.png`}
+                      alt={type.name}
+                      width="48"
+                      height="48"
+                    />
+                    <span className="text-sm">{type.name}</span>
+                  </Button>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
+      {teraType && targetPokemon && (
+        <section className="bg-slate-200 p-4 mt-4 rounded-md flex flex-col gap-2">
+          <p className="font-bold w-full text-center">
+            You&apos;re attacking {teraType.name} {targetPokemon.name}
+          </p>
+          <div className="flex flex-row justify-center items-center">
+            <Image
+              src={`/img/${teraType.name}_tera.png`}
+              alt={teraType.name}
+              width="60"
+              height="60"
+            />
+            <Image
+              src={targetPokemon.image}
+              alt={targetPokemon.name}
+              width="96"
+              height="96"
+            />
+          </div>
+          <Button
+            className="bg-blue-600 text-white font-bold hover:bg-blue-200"
+            onClick={handleReset}
+          >
+            Reset
+          </Button>
+        </section>
+      )}
+      {teraType && targetPokemon && (
         <div>
-          <section className="bg-slate-200 p-4 mt-4 rounded-md">
-            <div className="p-2">
-              <Image
-                src={`/img/${teraType.name}_tera.png`}
-                alt={teraType.name}
-                width="48"
-                height="48"
-                className="inline-block"
-              />
-              <p className="inline-block font-bold mb-8">
-                You&apos;re attacking {teraType.name} {targetPokemon.name}
-              </p>
-              <p>
-                When attacking a tera raid, the Pokemon will ONLY have the
-                weaknesses of it&apos;s Tera type.
-              </p>
-              <p>
-                This means you should choose ATTACKS which will hit for
-                supereffective damage.
+          <section className="bg-slate-200 mt-4 p-4 rounded-md">
+            <div className="">
+              <p className="font-bold mb-4">
+                Make sure you do supereffective damage against the tera type
               </p>
             </div>
-            <section className="flex">
-              <section className="bg-white p-2 m-2 rounded-md">
-                <h2 className="font-bold">Pick these</h2>
-                <p>These attacks are supereffective</p>
+            <section className="grid grid-cols-3">
+              <section className="bg-white p-2 mr-2 rounded-md">
+                <h2 className="font-bold">Super-effective</h2>
+                <p className="text-sm mb-4">Attacks do double damage</p>
                 <ul>
                   {teraType.damage_relations.double_damage_from.map((x) => (
-                    <li key={x.name} className="py-1">
+                    <li key={x.name} className="pb-1">
                       <Image
                         src={`/img/${x.name}_type_banner.png`}
                         alt={x.name}
@@ -178,12 +215,12 @@ export default function TeraRaid({ types }) {
                   ))}
                 </ul>
               </section>
-              <section className="bg-white m-2 p-2 rounded-md">
-                <h2 className="font-bold">Avoid these</h2>
-                <p>These attacks are not very effective</p>
+              <section className="bg-white mr-2 p-2 rounded-md">
+                <h2 className="font-bold">Not effective</h2>
+                <p className="text-sm mb-4">Attacks do half damage</p>
                 <ul>
                   {teraType.damage_relations.half_damage_from.map((x) => (
-                    <li key={x.name} className="py-1">
+                    <li key={x.name} className="pb-1">
                       <Image
                         src={`/img/${x.name}_type_banner.png`}
                         alt={x.name}
@@ -194,69 +231,124 @@ export default function TeraRaid({ types }) {
                   ))}
                 </ul>
               </section>
-              {teraType.damage_relations.no_damage_from.length > 0 && (
-                <section className="bg-white m-2 p-2 rounded-md">
-                  <h2 className="font-bold">Avoid these</h2>
-                  <p>The attacks do no damage</p>
+              {
+                <section className="bg-white p-2 rounded-md">
+                  <h2 className="font-bold">Immune</h2>
+                  <p className="text-sm mb-4">Attacks do no damage</p>
                   <ul>
-                    {teraType.damage_relations.no_damage_from.map((x) => (
-                      <li key={x.name} className="py-1">
-                        <Image
-                          src={`/img/${x.name}_type_banner.png`}
-                          alt={x.name}
-                          width="100"
-                          height="24"
-                        />
-                      </li>
-                    ))}
+                    {teraType.damage_relations.no_damage_from.length > 0 ? (
+                      teraType.damage_relations.no_damage_from.map((x) => (
+                        <li key={x.name} className="pb-1">
+                          <Image
+                            src={`/img/${x.name}_type_banner.png`}
+                            alt={x.name}
+                            width="100"
+                            height="24"
+                          />
+                        </li>
+                      ))
+                    ) : (
+                      <p className="text-sm">Nothing</p>
+                    )}
                   </ul>
                 </section>
-              )}
+              }
             </section>
-            <p className="text-sm font-bold p-4">
-              If your Pokemon is the same type as the attack it will recieve the
-              Same Type Attack Bonus (STAB) which will do more damage.
+            <p className="text-sm mt-4">
+              When attacking a tera raid, the Pokemon will ONLY have the
+              weaknesses of it&apos;s Tera type not the Pokemon&apos;s original
+              type(s).
             </p>
           </section>
           {targetPokemon && (
-            <section className="bg-slate-200 p-4 mt-4 rounded-md flex flex-row">
-              <article className="bg-white rounded-md flex flex-col items-center p-2 mr-4">
-                <Image
-                  src={targetPokemon.image}
-                  alt={targetPokemon.name}
-                  width="128"
-                  height="128"
-                />
-                <p>Will STAB with</p>
-                <ul>
-                  {targetPokemon.types.map((t) => (
-                    <li key={t.type.name} className="py-1">
-                      <Image
-                        src={`/img/${t.type.name}_type_banner.png`}
-                        alt={t.type.name}
-                        width="100"
-                        height="24"
-                      />
+            <section className="bg-slate-200 p-4 mt-4 rounded-md">
+              <p className="font-bold mb-4">Pokemon evaluator</p>
+              <section className="flex">
+                <div>
+                  <Image
+                    src={targetPokemon.image}
+                    alt={targetPokemon.name}
+                    width="128"
+                    height="128"
+                  />
+                </div>
+                <div>
+                  <ul className="text-sm">
+                    <li key="types" className="inline-block">
+                      {targetPokemon.types.map((t) => (
+                        <Image
+                          key={"type_banner_" + t.type.name}
+                          src={`/img/${t.type.name}_type_banner.png`}
+                          alt={t.type.name}
+                          width="100"
+                          height="24"
+                          className="inline-block"
+                        />
+                      ))}
                     </li>
-                  ))}
-                </ul>
-              </article>
-              <article className="bg-white rounded-md flex flex-col items-center p-2">
-                <p>Has access to:</p>
-                <ul>
-                  {moveTypeAccess.map((type) => (
-                    <li key={type}>
-                      {" "}
-                      <Image
-                        src={`/img/${type}_type_banner.png`}
-                        alt={type}
-                        width="100"
-                        height="24"
-                      />
+                    <li key="hp">
+                      HP:
+                      <span className="h-8">{statAnalysis.hp}</span>
                     </li>
-                  ))}
-                </ul>
-              </article>
+                    <p className="font-bold">Attack</p>
+                    <li key="attack">
+                      Attack:
+                      <span className="h-8">{statAnalysis.attack}</span>
+                    </li>
+                    <li key="special-attack">
+                      Special Attack:
+                      <span className="h-8">
+                        {statAnalysis["special-attack"]}
+                      </span>
+                    </li>
+                    <p className="font-bold">Defense</p>
+                    <li key="attack">
+                      Defense:
+                      <span className="h-8">{statAnalysis.defense}</span>
+                    </li>
+                    <li key="special-attack">
+                      Special Defense:
+                      <span className="h-8">
+                        {statAnalysis["special-defense"]}
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </section>
+              <section>
+                <p className="font-bold my-4">
+                  Make sure you aren&apos;t weak to the Pokemon&apos;s available
+                  attacks.
+                </p>
+                {/* <article className="bg-white rounded-md flex flex-col items-center p-2 mr-4">
+                  <p>Will STAB with</p>
+                  <ul></ul>
+                </article> */}
+                <article className="bg-white rounded-md flex flex-col items-center p-2">
+                  <p>Has access to:</p>
+                  <ul>
+                    {moveTypeAccess.map((type) => (
+                      <li key={type}>
+                        <Image
+                          src={`/img/${type}_type_banner.png`}
+                          alt={type}
+                          width="100"
+                          height="24"
+                        />
+                        <ul>
+                          {validMoves
+                            .filter((m) => m.type.name === type)
+                            .map((m) => (
+                              <li className="text-sm" key={m.name}>
+                                {m.name}
+                              </li>
+                            ))}
+                        </ul>
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              </section>
             </section>
           )}
           <section>

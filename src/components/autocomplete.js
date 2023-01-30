@@ -41,35 +41,35 @@ export function AutoComplete(props) {
   let outerRef = React.useRef(null);
 
   return (
-    <div className="inline-flex flex-col relative mt-4 w-52">
+    <div className="inline-flex flex-col relative w-full">
       <label
         {...labelProps}
-        className="block text-sm font-medium text-gray-700 text-left"
+        className="block font-bold text-gray-700 text-left mb-2"
       >
         {props.label}
       </label>
       <div
         ref={outerRef}
-        className={`relative px-2 flex flex-row items-center rounded-md overflow-hidden shadow-sm border-2 ${
+        className={`relative px-4 flex flex-row items-center rounded-md overflow-hidden shadow-sm border-2 bg-white ${
           state.isFocused ? "border-pink-500" : "border-gray-300"
         }`}
       >
         <MagnifyingGlassIcon
           aria-hidden="true"
-          className="w-5 h-5 text-gray-500"
+          className="w-6 h-6 text-gray-500"
         />
         <input
           {...inputProps}
           ref={inputRef}
-          className="w-full outline-none px-3 py-1 appearance-none"
+          className="w-full outline-none px-3 py-3 appearance-none"
         />
         <button
           {...buttonProps}
           ref={clearButtonRef}
           style={{ visibility: state.inputValue !== "" ? "visible" : "hidden" }}
-          className="cursor-default text-gray-500 hover:text-gray-600"
+          className="cursor-default bg-white text-gray-500 hover:text-gray-600"
         >
-          <XMarkIcon aria-hidden="true" className="w-4 h-4" />
+          <XMarkIcon aria-hidden="true" className="w-6 h-6" />
         </button>
       </div>
       {state.isOpen && (
@@ -79,7 +79,7 @@ export function AutoComplete(props) {
           state={state}
           isNonModal
           placement="bottom start"
-          className="w-52"
+          className="w-72"
         >
           <ListBox {...listBoxProps} listBoxRef={listBoxRef} state={state} />
         </Popover>
