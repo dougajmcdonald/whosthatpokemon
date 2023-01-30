@@ -42,8 +42,8 @@ export default function TeraRaid({ types }) {
     const statAnalysis = {
       strongestAttackStat:
         statObj.attack > statObj["special-attack"] ? "physical" : "special",
-      strongestDefenseStat:
-        statObj.defense > statObj["special-defense"] ? "physical" : "special",
+      weakestDefenseStat:
+        statObj.defense < statObj["special-defense"] ? "physical" : "special",
       ...statObj,
     };
 
@@ -163,7 +163,7 @@ export default function TeraRaid({ types }) {
           </ul>
         </section>
       )}
-      {teraType && targetPokemon && (
+      {/* {teraType && targetPokemon && (
         <section className="bg-slate-200 p-4 mt-4 rounded-md flex flex-col gap-2">
           <p className="font-bold w-full text-center">
             You&apos;re attacking {teraType.name} {targetPokemon.name}
@@ -182,87 +182,15 @@ export default function TeraRaid({ types }) {
               height="96"
             />
           </div>
-          <Button
-            className="bg-blue-600 text-white font-bold hover:bg-blue-200"
-            onClick={handleReset}
-          >
-            Reset
-          </Button>
         </section>
-      )}
+      )} */}
       {teraType && targetPokemon && (
         <div>
-          <section className="bg-slate-200 mt-4 p-4 rounded-md">
-            <div className="">
-              <p className="font-bold mb-4">
-                Make sure you do supereffective damage against the tera type
-              </p>
-            </div>
-            <section className="grid grid-cols-3">
-              <section className="bg-white p-2 mr-2 rounded-md">
-                <h2 className="font-bold">Super-effective</h2>
-                <p className="text-sm mb-4">Attacks do double damage</p>
-                <ul>
-                  {teraType.damage_relations.double_damage_from.map((x) => (
-                    <li key={x.name} className="pb-1">
-                      <Image
-                        src={`/img/${x.name}_type_banner.png`}
-                        alt={x.name}
-                        width="100"
-                        height="24"
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </section>
-              <section className="bg-white mr-2 p-2 rounded-md">
-                <h2 className="font-bold">Not effective</h2>
-                <p className="text-sm mb-4">Attacks do half damage</p>
-                <ul>
-                  {teraType.damage_relations.half_damage_from.map((x) => (
-                    <li key={x.name} className="pb-1">
-                      <Image
-                        src={`/img/${x.name}_type_banner.png`}
-                        alt={x.name}
-                        width="100"
-                        height="24"
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </section>
-              {
-                <section className="bg-white p-2 rounded-md">
-                  <h2 className="font-bold">Immune</h2>
-                  <p className="text-sm mb-4">Attacks do no damage</p>
-                  <ul>
-                    {teraType.damage_relations.no_damage_from.length > 0 ? (
-                      teraType.damage_relations.no_damage_from.map((x) => (
-                        <li key={x.name} className="pb-1">
-                          <Image
-                            src={`/img/${x.name}_type_banner.png`}
-                            alt={x.name}
-                            width="100"
-                            height="24"
-                          />
-                        </li>
-                      ))
-                    ) : (
-                      <p className="text-sm">Nothing</p>
-                    )}
-                  </ul>
-                </section>
-              }
-            </section>
-            <p className="text-sm mt-4">
-              When attacking a tera raid, the Pokemon will ONLY have the
-              weaknesses of it&apos;s Tera type not the Pokemon&apos;s original
-              type(s).
-            </p>
-          </section>
-          {targetPokemon && (
+          {targetPokemon && teraType && (
             <section className="bg-slate-200 p-4 mt-4 rounded-md">
-              <p className="font-bold mb-4">Pokemon evaluator</p>
+              <p className="font-bold mb-4">
+                Pokemon analysis for {targetPokemon.name}
+              </p>
               <section className="flex">
                 <div>
                   <Image
@@ -302,11 +230,11 @@ export default function TeraRaid({ types }) {
                       </span>
                     </li>
                     <p className="font-bold">Defense</p>
-                    <li key="attack">
+                    <li key="defense">
                       Defense:
                       <span className="h-8">{statAnalysis.defense}</span>
                     </li>
-                    <li key="special-attack">
+                    <li key="special-defense">
                       Special Defense:
                       <span className="h-8">
                         {statAnalysis["special-defense"]}
@@ -317,14 +245,84 @@ export default function TeraRaid({ types }) {
               </section>
               <section>
                 <p className="font-bold my-4">
-                  Make sure you aren&apos;t weak to the Pokemon&apos;s available
+                  This Pokemon is mainly a {statAnalysis.strongestAttackStat}{" "}
+                  attacker.
+                </p>
+                <p className="font-bold my-4">
+                  It it weaker against {statAnalysis.weakestDefenseStat}{" "}
                   attacks.
                 </p>
-                {/* <article className="bg-white rounded-md flex flex-col items-center p-2 mr-4">
-                  <p>Will STAB with</p>
-                  <ul></ul>
-                </article> */}
-                <article className="bg-white rounded-md flex flex-col items-center p-2">
+                <div>
+                  <p className="font-bold mb-4">Tera type analysis</p>
+                  <p className="text-sm my-4">
+                    When attacking a tera raid, the Pokemon will ONLY have the
+                    weaknesses of it&apos;s Tera type not the Pokemon&apos;s
+                    original type(s).
+                  </p>
+                </div>
+                <section className="grid grid-cols-3">
+                  <section className="bg-white p-2 mr-2 rounded-md">
+                    <h2 className="font-bold">Super-effective</h2>
+                    <p className="text-sm mb-4">Attacks do double damage</p>
+                    <ul>
+                      {teraType.damage_relations.double_damage_from.map((x) => (
+                        <li key={x.name} className="pb-1">
+                          <Image
+                            src={`/img/${x.name}_type_banner.png`}
+                            alt={x.name}
+                            width="100"
+                            height="24"
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                  <section className="bg-white mr-2 p-2 rounded-md">
+                    <h2 className="font-bold">Not effective</h2>
+                    <p className="text-sm mb-4">Attacks do half damage</p>
+                    <ul>
+                      {teraType.damage_relations.half_damage_from.map((x) => (
+                        <li key={x.name} className="pb-1">
+                          <Image
+                            src={`/img/${x.name}_type_banner.png`}
+                            alt={x.name}
+                            width="100"
+                            height="24"
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                  {
+                    <section className="bg-white p-2 rounded-md">
+                      <h2 className="font-bold">Immune</h2>
+                      <p className="text-sm mb-4">Attacks do no damage</p>
+                      <ul>
+                        {teraType.damage_relations.no_damage_from.length > 0 ? (
+                          teraType.damage_relations.no_damage_from.map((x) => (
+                            <li key={x.name} className="pb-1">
+                              <Image
+                                src={`/img/${x.name}_type_banner.png`}
+                                alt={x.name}
+                                width="100"
+                                height="24"
+                              />
+                            </li>
+                          ))
+                        ) : (
+                          <p className="text-sm">Nothing</p>
+                        )}
+                      </ul>
+                    </section>
+                  }
+                </section>
+                <Button
+                  className="bg-blue-600 text-white font-bold hover:bg-blue-200 mt-4"
+                  onClick={handleReset}
+                >
+                  Reset
+                </Button>
+                {/* <article className="bg-white rounded-md flex flex-col items-center p-2">
                   <p>Has access to:</p>
                   <ul>
                     {moveTypeAccess.map((type) => (
@@ -340,19 +338,22 @@ export default function TeraRaid({ types }) {
                             .filter((m) => m.type.name === type)
                             .map((m) => (
                               <li className="text-sm" key={m.name}>
-                                {m.name}
+                                {m.name} - {m.power} - {m.damage_class.name}
                               </li>
                             ))}
                         </ul>
                       </li>
                     ))}
                   </ul>
-                </article>
+                </article> */}
               </section>
             </section>
           )}
-          <section>
-            {/* <p>Recommended pokemon</p>
+          <section className="bg-slate-200 mt-4 p-4 rounded-md">
+            <p className="font-bold my-4">
+              These Pokemon are super effective and not vulnerbale to STAB
+              attacks
+            </p>
             <ul>
               {types
                 .filter((x) =>
@@ -360,13 +361,34 @@ export default function TeraRaid({ types }) {
                     .map((y) => y.name)
                     .includes(x.name)
                 )
+                .filter((x) => {
+                  console.log("types that double dmg the tera", x);
+                  console.log(
+                    "types we want to remove",
+                    targetPokemon.types.map((t) => t.type.name)
+                  );
+                  return x;
+                })
+                .filter(
+                  (x) =>
+                    !x.damage_relations.double_damage_from
+                      .map((y) => y.name)
+                      .includes(targetPokemon.types.map((t) => t.type.name))
+                )
+                .filter((x) => {
+                  console.log(
+                    "types that dont take double dmg from pokemon types",
+                    x
+                  );
+                  return x;
+                })
                 .map((z) =>
                   z.pokemon
                     .map((x) => x.pokemon.name)
                     .filter(filterNameToValidPokemon)
                     .map((name) => <li key={name}>{name}</li>)
                 )}
-            </ul> */}
+            </ul>
           </section>
         </div>
       )}
