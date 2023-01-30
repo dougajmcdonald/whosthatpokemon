@@ -221,7 +221,7 @@ export default function TeraRaid({ types }) {
                       width="48"
                       height="48"
                     />
-                    <span className="text-sm">{type.name}</span>
+                    <span className="text-sm capitalize">{type.name}</span>
                   </Button>
                 </li>
               );
