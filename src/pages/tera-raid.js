@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { Inter } from "@next/font/google";
 import Pokedex from "pokedex-promise-v2";
@@ -20,36 +20,76 @@ export default function TeraRaid({ types }) {
   const [validMoves, setValidMoves] = React.useState();
   const [moveTypeAccess, setMoveTypeAccess] = React.useState();
   const [statAnalysis, setStatAnalysis] = React.useState();
+  const [recommendedPokemon, setRecommendedPokemon] = React.useState();
 
-  const handleClick = (type) => {
+  const handleClick = async (type) => {
     setTeraType(type);
+    await getAcceptableTypes(type);
   };
 
-  const superEffectiveDamageTypes = (type) => {
+  const superEffectiveDamageTypes = (type, teraType) => {
     // check the type against those which will supereffectively dmg the
     // tera type of the raid
-    console.log("tera type", teraType.name);
-    console.log("Does it take SE dmg from", type.name);
     const filteredResult = teraType.damage_relations.double_damage_from
       .map((y) => y.name)
       .includes(type.name);
-    console.log(filteredResult);
+    // console.log(
+    //   "Tera type: ",
+    //   teraType.name,
+    //   "Does it take SE dmg from",
+    //   type.name,
+    //   filteredResult
+    // );
     return filteredResult;
   };
 
   const weakToStabTypes = (type) => {
     // check the type against the selected pokemon stab types
     // we can assume it has access to moves of this type and they will hurt most!
-    console.log("input type", type);
-    console.log(
-      "types to exclude",
-      targetPokemon.types.map((t) => t.type.name)
-    );
+
     const filterResult = !type.damage_relations.double_damage_from
       .map((x) => x.name)
       .some((x) => targetPokemon.types.map((t) => t.type.name).includes(x));
-    console.log(filterResult);
+    // console.log(
+    //   "input type",
+    //   type,
+    //   "types to exclude",
+    //   targetPokemon.types.map((t) => t.type.name),
+    //   filterResult
+    // );
     return filterResult;
+  };
+
+  const getAcceptableTypes = async (type) => {
+    const acceptableCandidates = types
+      .filter((t) => superEffectiveDamageTypes(t, type))
+      .filter(weakToStabTypes)
+      .map((x) =>
+        x.pokemon.map((z) => z.pokemon.name).filter(filterNameToValidPokemon)
+      )
+      .flat();
+
+    //remove dupes
+    const uniqueAcceptableCandidates = [...new Set(acceptableCandidates)];
+    //console.log("names", uniqueAcceptableCandidates);
+
+    // long wait
+    if (uniqueAcceptableCandidates.length > 0) {
+      const candidateData = await P.getPokemonByName(
+        uniqueAcceptableCandidates
+      );
+      //console.log("data", candidateData);
+
+      const validMons = candidateData.filter((x) =>
+        x.types
+          .map((t) => t.type.name)
+          .every(
+            (x) => !targetPokemon.types.map((t) => t.type.name).includes(x)
+          )
+      );
+      //console.log(validMons);
+      setRecommendedPokemon(validMons);
+    }
   };
 
   const physicalSpecialAnalysis = (pokemon) => {
@@ -70,14 +110,15 @@ export default function TeraRaid({ types }) {
       ...statObj,
     };
 
-    console.log(statAnalysis);
+    //console.log(statAnalysis);
     setStatAnalysis(statAnalysis);
   };
 
   const handleSelectionChange = async (pokemonName) => {
+    setMoveTypeAccess(null);
     if (pokemonName) {
       const selectedPokemon = await P.getPokemonByName(pokemonName);
-      console.log("SelectedPokemon", selectedPokemon);
+      //console.log("SelectedPokemon", selectedPokemon);
 
       const pokemonWithImage = {
         ...selectedPokemon,
@@ -104,20 +145,21 @@ export default function TeraRaid({ types }) {
         .map((m) => m.type.name)
         .filter((item, index, arr) => arr.indexOf(item) === index);
 
-      const groupMoveByType = damagingMoves.reduce((group, move) => {
-        const {
-          type: { name },
-        } = move;
-        group[name] = group[name] ?? [];
-        group[name].push(move);
-        return group;
-      }, {});
+      // const groupMoveByType = damagingMoves.reduce((group, move) => {
+      //   const {
+      //     type: { name },
+      //   } = move;
+      //   group[name] = group[name] ?? [];
+      //   group[name].push(move);
+      //   return group;
+      // }, {});
 
-      console.log(groupMoveByType);
+      //console.log(groupMoveByType);
 
       setMoveTypeAccess(moveTypes);
+      //console.log(moveTypes);
 
-      console.log(damagingMoves);
+      //console.log(damagingMoves);
     }
   };
 
@@ -162,7 +204,7 @@ export default function TeraRaid({ types }) {
           {(item) => <Item>{item.name}</Item>}
         </AutoComplete>
       </section>
-      {targetPokemon && (
+      {targetPokemon && moveTypeAccess && (
         <section className="p-4 rounded-md bg-slate-200">
           <p className="font-bold mb-2">
             What tera type is the Pokemon you&apos;re attacking?
@@ -171,7 +213,7 @@ export default function TeraRaid({ types }) {
             {types.map((type) => {
               return (
                 <li key={type.name} className="inline-block">
-                  <Button onPress={() => handleClick(type)}>
+                  <Button onClick={() => handleClick(type)}>
                     <Image
                       src={`/img/${type.name}_tera.png`}
                       alt={type.name}
@@ -186,33 +228,12 @@ export default function TeraRaid({ types }) {
           </ul>
         </section>
       )}
-      {/* {teraType && targetPokemon && (
-        <section className="bg-slate-200 p-4 mt-4 rounded-md flex flex-col gap-2">
-          <p className="font-bold w-full text-center">
-            You&apos;re attacking {teraType.name} {targetPokemon.name}
-          </p>
-          <div className="flex flex-row justify-center items-center">
-            <Image
-              src={`/img/${teraType.name}_tera.png`}
-              alt={teraType.name}
-              width="60"
-              height="60"
-            />
-            <Image
-              src={targetPokemon.image}
-              alt={targetPokemon.name}
-              width="96"
-              height="96"
-            />
-          </div>
-        </section>
-      )} */}
       {teraType && targetPokemon && (
         <div>
           {targetPokemon && teraType && (
             <section className="bg-slate-200 p-4 mt-4 rounded-md">
-              <p className="font-bold mb-4">
-                Pokemon analysis for {targetPokemon.name}
+              <p className="font-bold mb-4 capitalize">
+                Pokemon analysis for {targetPokemon.name} ({teraType.name})
               </p>
               <section className="flex">
                 <div>
@@ -267,14 +288,14 @@ export default function TeraRaid({ types }) {
                 </div>
               </section>
               <section>
-                <p className="font-bold my-4">
+                {/* <p className="font-bold my-4">
                   This Pokemon is mainly a {statAnalysis.strongestAttackStat}{" "}
                   attacker.
                 </p>
                 <p className="font-bold my-4">
                   It it weaker against {statAnalysis.weakestDefenseStat}{" "}
                   attacks.
-                </p>
+                </p> */}
                 <div className="inline-block">
                   <p className="font-bold mb-2">
                     Tera type analysis {teraType.name}
@@ -295,8 +316,8 @@ export default function TeraRaid({ types }) {
                     </p>
                   </div>
                 </div>
-                <section className="grid grid-cols-3">
-                  <section className="bg-white p-2 mr-2 rounded-md">
+                <section className="grid grid-cols-3  text-white">
+                  <section className="bg-slate-800 p-2 mr-2 rounded-md">
                     <h2 className="font-bold">Super-effective</h2>
                     <p className="text-sm mb-4">Attacks do double damage</p>
                     <ul>
@@ -312,7 +333,7 @@ export default function TeraRaid({ types }) {
                       ))}
                     </ul>
                   </section>
-                  <section className="bg-white mr-2 p-2 rounded-md">
+                  <section className="bg-slate-800 mr-2 p-2 rounded-md">
                     <h2 className="font-bold">Not effective</h2>
                     <p className="text-sm mb-4">Attacks do half damage</p>
                     <ul>
@@ -329,7 +350,7 @@ export default function TeraRaid({ types }) {
                     </ul>
                   </section>
                   {
-                    <section className="bg-white p-2 rounded-md">
+                    <section className="bg-slate-800 p-2 rounded-md">
                       <h2 className="font-bold">Immune</h2>
                       <p className="text-sm mb-4">Attacks do no damage</p>
                       <ul>
@@ -386,11 +407,45 @@ export default function TeraRaid({ types }) {
           )}
           <section className="bg-slate-200 mt-4 p-4 rounded-md">
             <p className="font-bold my-4">
-              These Pokemon are super effective and not vulnerbale to STAB
-              attacks
+              These Pokemon have access to super effective moves and not
+              vulnerbale to STAB attacks
             </p>
-            <ul>
-              {types
+            <ul className="inline-block grid grid-cols-3">
+              {recommendedPokemon &&
+                recommendedPokemon.map((p) => (
+                  <article
+                    key={p.id + p.name}
+                    className="flex justify-center items-center border border-gray-500 rounded-md py-2 m-2 w-auto"
+                  >
+                    <div>
+                      <Image
+                        src={pokemonImageUrl(p.id)}
+                        alt={p.name}
+                        width="64"
+                        height="64"
+                      />
+                    </div>
+                    <section>
+                      <p className="font-bold capitalize">{p.name}</p>
+                      <ul>
+                        {p.types
+                          .filter((t) => t.type.name !== "unknown")
+                          .map((t) => (
+                            <li key={p.id + t.type.name}>
+                              {" "}
+                              <Image
+                                src={`/img/${t.type.name}_type_banner.png`}
+                                alt={t.type.name}
+                                width="66"
+                                height="16"
+                              />
+                            </li>
+                          ))}
+                      </ul>
+                    </section>
+                  </article>
+                ))}
+              {/* {types
                 .filter(superEffectiveDamageTypes)
                 .filter(weakToStabTypes)
                 .filter((x) => {
@@ -410,7 +465,7 @@ export default function TeraRaid({ types }) {
                         {name} {}
                       </li>
                     ))
-                )}
+                )} */}
             </ul>
           </section>
         </div>
