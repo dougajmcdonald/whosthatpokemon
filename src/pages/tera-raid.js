@@ -1,22 +1,93 @@
+import React from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { Inter } from "@next/font/google";
 import Pokedex from "pokedex-promise-v2";
-import React from "react";
 import { filterNameToValidPokemon } from "../data/filters";
+import { svPokedex } from "../data/sv_pokemon";
 
 const inter = Inter({ subsets: ["latin"] });
 
 import Layout from "../components/layout";
+import Button from "../components/button";
+import { AutoComplete } from "../components/autocomplete";
+import { Item, Section } from "../components/combobox";
 
 export default function TeraRaid({ types }) {
+  const P = new Pokedex();
+
   const [teraType, setTeraType] = React.useState();
+  const [targetPokemon, setTargetPokemon] = React.useState();
+  const [validMoves, setValidMoves] = React.useState();
+  const [moveTypeAccess, setMoveTypeAccess] = React.useState();
+  //const [targetPokemonImage, setTargetPokemon] = React.useState();
 
   const handleClick = (type) => {
     setTeraType(type);
   };
 
-  //console.log(types[0]);
+  const handleSelectionChange = async (pokemonName) => {
+    if (pokemonName) {
+      const selectedPokemon = await P.getPokemonByName(pokemonName);
+      console.log("SelectedPokemon", selectedPokemon);
+
+      const pokemonWithImage = {
+        ...selectedPokemon,
+        image: pokemonImageUrl(selectedPokemon.id),
+      };
+
+      setTargetPokemon(pokemonWithImage);
+
+      //moves
+      //console.log("valid moves", getSVMoves(selectedPokemon.moves));
+      const validMoves = getSVMoves(selectedPokemon.moves);
+
+      const moveData = await P.getMoveByName(validMoves.map((m) => m.name));
+
+      const damagingMoves = moveData.filter(
+        (m) => m.damage_class.name !== "status"
+      );
+
+      setValidMoves(damagingMoves);
+
+      const moveTypes = damagingMoves
+        .map((m) => m.type.name)
+        .filter((item, index, arr) => arr.indexOf(item) === index);
+
+      setMoveTypeAccess(moveTypes);
+      //damagingMoves.map(m => m.type.name)
+
+      // const moveData = await validMoves.forEach(
+      //   async (m) => await getMoveData(m.name)
+      // );
+      //console.log(moveData);
+      //console.log(damagingMoves);
+      console.log(moveTypes);
+    }
+  };
+
+  const pokemonImageUrl = (id) => {
+    let paddedId;
+
+    if (id.toString().length > 3) {
+      paddedId = ("0" + id).slice(-4);
+    } else {
+      paddedId = ("00" + id).slice(-3);
+    }
+
+    return `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${paddedId}.png`;
+  };
+
+  const getMoveData = async (name) => await P.getMoveByName(name);
+
+  const getSVMoves = (moves) =>
+    moves
+      .filter(
+        (m) =>
+          m.version_group_details.filter(
+            (vgd) => vgd.version_group.name === "scarlet-violet"
+          ).length > 0
+      )
+      .map((m) => m.move);
 
   return (
     <Layout title="Tera raid helper">
@@ -29,10 +100,7 @@ export default function TeraRaid({ types }) {
           {types.map((type) => {
             return (
               <li key={type.name} className="inline-block">
-                <button
-                  className="p-2 border rounded-md m-2 hover:bg-slate-300"
-                  onClick={() => handleClick(type)}
-                >
+                <Button onClick={() => handleClick(type)}>
                   <Image
                     src={`/img/${type.name}_tera.png`}
                     alt={type.name}
@@ -40,11 +108,34 @@ export default function TeraRaid({ types }) {
                     height="48"
                   />
                   {type.name}
-                </button>
+                </Button>
               </li>
             );
           })}
         </ul>
+        <p className="font-bold">Which Pokemon is it?</p>
+        <AutoComplete
+          label="Search"
+          defaultItems={svPokedex}
+          onSelectionChange={handleSelectionChange}
+        >
+          {(item) => <Item>{item.name}</Item>}
+
+          {/* <Section title="Companies">
+            <Item>Chatterbridge</Item>
+            <Item>Tagchat</Item>
+            <Item>Yambee</Item>
+            <Item>Photobug</Item>
+            <Item>Livepath</Item>
+          </Section>
+          <Section title="People">
+            <Item>Theodor Dawber</Item>
+            <Item>Dwight Stollenberg</Item>
+            <Item>Maddalena Prettjohn</Item>
+            <Item>Maureen Fassan</Item>
+            <Item>Abbie Binyon</Item>
+          </Section> */}
+        </AutoComplete>
       </section>
 
       {teraType && (
@@ -59,7 +150,7 @@ export default function TeraRaid({ types }) {
                 className="inline-block"
               />
               <p className="inline-block font-bold mb-8">
-                You&apos;re attacking {teraType.name}
+                You&apos;re attacking {teraType.name} {targetPokemon.name}
               </p>
               <p>
                 When attacking a tera raid, the Pokemon will ONLY have the
@@ -127,8 +218,49 @@ export default function TeraRaid({ types }) {
               Same Type Attack Bonus (STAB) which will do more damage.
             </p>
           </section>
+          {targetPokemon && (
+            <section className="bg-slate-200 p-4 mt-4 rounded-md flex flex-row">
+              <article className="bg-white rounded-md flex flex-col items-center p-2 mr-4">
+                <Image
+                  src={targetPokemon.image}
+                  alt={targetPokemon.name}
+                  width="128"
+                  height="128"
+                />
+                <p>Will STAB with</p>
+                <ul>
+                  {targetPokemon.types.map((t) => (
+                    <li key={t.type.name} className="py-1">
+                      <Image
+                        src={`/img/${t.type.name}_type_banner.png`}
+                        alt={t.type.name}
+                        width="100"
+                        height="24"
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </article>
+              <article className="bg-white rounded-md flex flex-col items-center p-2">
+                <p>Has access to:</p>
+                <ul>
+                  {moveTypeAccess.map((type) => (
+                    <li key={type}>
+                      {" "}
+                      <Image
+                        src={`/img/${type}_type_banner.png`}
+                        alt={type}
+                        width="100"
+                        height="24"
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            </section>
+          )}
           <section>
-            <p>Recommended pokemon</p>
+            {/* <p>Recommended pokemon</p>
             <ul>
               {types
                 .filter((x) =>
@@ -142,7 +274,7 @@ export default function TeraRaid({ types }) {
                     .filter(filterNameToValidPokemon)
                     .map((name) => <li key={name}>{name}</li>)
                 )}
-            </ul>
+            </ul> */}
           </section>
         </div>
       )}
