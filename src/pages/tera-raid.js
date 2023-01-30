@@ -25,19 +25,42 @@ export default function TeraRaid({ types }) {
     setTeraType(type);
   };
 
+  const superEffectiveDamageTypes = (type) => {
+    // check the type against those which will supereffectively dmg the
+    // tera type of the raid
+    console.log("tera type", teraType.name);
+    console.log("Does it take SE dmg from", type.name);
+    const filteredResult = teraType.damage_relations.double_damage_from
+      .map((y) => y.name)
+      .includes(type.name);
+    console.log(filteredResult);
+    return filteredResult;
+  };
+
+  const weakToStabTypes = (type) => {
+    // check the type against the selected pokemon stab types
+    // we can assume it has access to moves of this type and they will hurt most!
+    console.log("input type", type);
+    console.log(
+      "types to exclude",
+      targetPokemon.types.map((t) => t.type.name)
+    );
+    const filterResult = !type.damage_relations.double_damage_from
+      .map((x) => x.name)
+      .some((x) => targetPokemon.types.map((t) => t.type.name).includes(x));
+    console.log(filterResult);
+    return filterResult;
+  };
+
   const physicalSpecialAnalysis = (pokemon) => {
     const stats = pokemon.stats.map((s) => ({
       key: s.stat.name,
       base: s.base_stat,
     }));
 
-    //console.log(stats);
-
     const statMap = stats.map((s) => ({ [s.key]: s.base }));
 
     const statObj = Object.assign({}, ...statMap);
-
-    //console.log(statObj);
 
     const statAnalysis = {
       strongestAttackStat:
@@ -252,13 +275,25 @@ export default function TeraRaid({ types }) {
                   It it weaker against {statAnalysis.weakestDefenseStat}{" "}
                   attacks.
                 </p>
-                <div>
-                  <p className="font-bold mb-4">Tera type analysis</p>
-                  <p className="text-sm my-4">
-                    When attacking a tera raid, the Pokemon will ONLY have the
-                    weaknesses of it&apos;s Tera type not the Pokemon&apos;s
-                    original type(s).
+                <div className="inline-block">
+                  <p className="font-bold mb-2">
+                    Tera type analysis {teraType.name}
                   </p>
+                  <div className="flex flex-row">
+                    <div className="flex items-center justify-center mr-4">
+                      <Image
+                        src={`/img/${teraType.name}_tera.png`}
+                        alt={teraType.name}
+                        width="60"
+                        height="60"
+                      />
+                    </div>
+                    <p className="text-sm my-4 inline-block">
+                      When attacking a tera raid, the Pokemon will ONLY have the
+                      weaknesses of it&apos;s Tera type not the Pokemon&apos;s
+                      original type(s).
+                    </p>
+                  </div>
                 </div>
                 <section className="grid grid-cols-3">
                   <section className="bg-white p-2 mr-2 rounded-md">
@@ -356,37 +391,25 @@ export default function TeraRaid({ types }) {
             </p>
             <ul>
               {types
-                .filter((x) =>
-                  teraType.damage_relations.double_damage_from
-                    .map((y) => y.name)
-                    .includes(x.name)
-                )
+                .filter(superEffectiveDamageTypes)
+                .filter(weakToStabTypes)
                 .filter((x) => {
-                  console.log("types that double dmg the tera", x);
-                  console.log(
-                    "types we want to remove",
-                    targetPokemon.types.map((t) => t.type.name)
-                  );
-                  return x;
+                  console.log("acceptable types", x);
+                  return true;
                 })
-                .filter(
-                  (x) =>
-                    !x.damage_relations.double_damage_from
-                      .map((y) => y.name)
-                      .includes(targetPokemon.types.map((t) => t.type.name))
-                )
-                .filter((x) => {
-                  console.log(
-                    "types that dont take double dmg from pokemon types",
-                    x
-                  );
-                  return x;
-                })
-                .map((z) =>
-                  z.pokemon
+                .map((x) =>
+                  x.pokemon
+                    // .filter((x) => {
+                    //   console.log(x.pokemon);
+                    //   return x;
+                    // })
                     .map((x) => x.pokemon.name)
                     .filter(filterNameToValidPokemon)
-                    .map((name) => <li key={name}>{name}</li>)
+                    .map((name) => (
+                      <li key={name}>
+                        {name} {}
+                      </li>
+                    ))
                 )}
             </ul>
           </section>
