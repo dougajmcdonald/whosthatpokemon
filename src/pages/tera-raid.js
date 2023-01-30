@@ -116,6 +116,7 @@ export default function TeraRaid({ types }) {
 
   const handleSelectionChange = async (pokemonName) => {
     setMoveTypeAccess(null);
+    setTargetPokemon(null);
     if (pokemonName) {
       const selectedPokemon = await P.getPokemonByName(pokemonName);
       //console.log("SelectedPokemon", selectedPokemon);
@@ -226,6 +227,12 @@ export default function TeraRaid({ types }) {
               );
             })}
           </ul>
+          <Button
+            className="bg-blue-600 text-white font-bold hover:bg-blue-200 mt-4"
+            onClick={handleReset}
+          >
+            Reset
+          </Button>
         </section>
       )}
       {teraType && targetPokemon && (
@@ -233,10 +240,11 @@ export default function TeraRaid({ types }) {
           {targetPokemon && teraType && (
             <section className="bg-slate-200 p-4 mt-4 rounded-md">
               <p className="font-bold mb-4 capitalize">
-                Pokemon analysis for {targetPokemon.name} ({teraType.name})
+                Pokemon analysis for {targetPokemon.name} with a {teraType.name}{" "}
+                tera
               </p>
               <section className="flex">
-                <div>
+                <div className="mr-8">
                   <Image
                     src={targetPokemon.image}
                     alt={targetPokemon.name}
@@ -245,8 +253,8 @@ export default function TeraRaid({ types }) {
                   />
                 </div>
                 <div>
-                  <ul className="text-sm">
-                    <li key="types" className="inline-block">
+                  <ul className="text-sm inline-block">
+                    <li key="types" className="inline-block w-full">
                       {targetPokemon.types.map((t) => (
                         <Image
                           key={"type_banner_" + t.type.name}
@@ -258,29 +266,31 @@ export default function TeraRaid({ types }) {
                         />
                       ))}
                     </li>
-                    <li key="hp">
+                    <li key="hp" className="inline-block mt-2">
                       HP:
-                      <span className="h-8">{statAnalysis.hp}</span>
+                      <span className="ml-2 h-8 text-right">
+                        {statAnalysis.hp}
+                      </span>
                     </li>
-                    <p className="font-bold">Attack</p>
+                    <p className="font-bold mt-2">Attack</p>
                     <li key="attack">
                       Attack:
-                      <span className="h-8">{statAnalysis.attack}</span>
+                      <span className="ml-2 h-8">{statAnalysis.attack}</span>
                     </li>
                     <li key="special-attack">
                       Special Attack:
-                      <span className="h-8">
+                      <span className="ml-2 h-8">
                         {statAnalysis["special-attack"]}
                       </span>
                     </li>
-                    <p className="font-bold">Defense</p>
+                    <p className="font-bold mt-2">Defense</p>
                     <li key="defense">
                       Defense:
-                      <span className="h-8">{statAnalysis.defense}</span>
+                      <span className="ml-2 h-8">{statAnalysis.defense}</span>
                     </li>
                     <li key="special-defense">
                       Special Defense:
-                      <span className="h-8">
+                      <span className="ml-2 h-8">
                         {statAnalysis["special-defense"]}
                       </span>
                     </li>
@@ -297,9 +307,6 @@ export default function TeraRaid({ types }) {
                   attacks.
                 </p> */}
                 <div className="inline-block">
-                  <p className="font-bold mb-2">
-                    Tera type analysis {teraType.name}
-                  </p>
                   <div className="flex flex-row">
                     <div className="flex items-center justify-center mr-4">
                       <Image
@@ -372,12 +379,6 @@ export default function TeraRaid({ types }) {
                     </section>
                   }
                 </section>
-                <Button
-                  className="bg-blue-600 text-white font-bold hover:bg-blue-200 mt-4"
-                  onClick={handleReset}
-                >
-                  Reset
-                </Button>
                 {/* <article className="bg-white rounded-md flex flex-col items-center p-2">
                   <p>Has access to:</p>
                   <ul>
