@@ -49,55 +49,83 @@ export default function TeraRaid({ types }) {
 
       {teraType && (
         <div>
-          <section>
-            <p>You&apos;re attacking {teraType.name}</p>
-            <section className="grid grid-cols-3">
-              <section className="bg-green-200 p-2 m-2 rounded-md">
-                <p>{teraType.name} takes double damage from</p>
+          <section className="bg-slate-200 p-4 mt-4 rounded-md">
+            <div className="p-2">
+              <Image
+                src={`/img/${teraType.name}_tera.png`}
+                alt={teraType.name}
+                width="48"
+                height="48"
+                className="inline-block"
+              />
+              <p className="inline-block font-bold mb-8">
+                You&apos;re attacking {teraType.name}
+              </p>
+              <p>
+                When attacking a tera raid, the Pokemon will ONLY have the
+                weaknesses of it&apos;s Tera type.
+              </p>
+              <p>
+                This means you should choose ATTACKS which will hit for
+                supereffective damage.
+              </p>
+            </div>
+            <section className="flex">
+              <section className="bg-white p-2 m-2 rounded-md">
+                <h2 className="font-bold">Pick these</h2>
+                <p>These attacks are supereffective</p>
                 <ul>
                   {teraType.damage_relations.double_damage_from.map((x) => (
-                    <li key={x.name}>
+                    <li key={x.name} className="py-1">
                       <Image
                         src={`/img/${x.name}_type_banner.png`}
                         alt={x.name}
-                        width="133"
-                        height="32"
+                        width="100"
+                        height="24"
                       />
                     </li>
                   ))}
                 </ul>
               </section>
-              <section className="bg-red-200 m-2 p-2 rounded-md">
-                <p>{teraType.name} takes half damage from</p>
+              <section className="bg-white m-2 p-2 rounded-md">
+                <h2 className="font-bold">Avoid these</h2>
+                <p>These attacks are not very effective</p>
                 <ul>
                   {teraType.damage_relations.half_damage_from.map((x) => (
-                    <li key={x.name}>
+                    <li key={x.name} className="py-1">
                       <Image
                         src={`/img/${x.name}_type_banner.png`}
                         alt={x.name}
-                        width="133"
-                        height="32"
+                        width="100"
+                        height="24"
                       />
                     </li>
                   ))}
                 </ul>
               </section>
-              <section className="bg-red-500 m-2 p-2 rounded-md">
-                <p>{teraType.name} takes no damage from</p>
-                <ul>
-                  {teraType.damage_relations.no_damage_from.map((x) => (
-                    <li key={x.name}>
-                      <Image
-                        src={`/img/${x.name}_type_banner.png`}
-                        alt={x.name}
-                        width="133"
-                        height="32"
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </section>
+              {teraType.damage_relations.no_damage_from.length > 0 && (
+                <section className="bg-white m-2 p-2 rounded-md">
+                  <h2 className="font-bold">Avoid these</h2>
+                  <p>The attacks do no damage</p>
+                  <ul>
+                    {teraType.damage_relations.no_damage_from.map((x) => (
+                      <li key={x.name} className="py-1">
+                        <Image
+                          src={`/img/${x.name}_type_banner.png`}
+                          alt={x.name}
+                          width="100"
+                          height="24"
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
             </section>
+            <p className="text-sm font-bold p-4">
+              If your Pokemon is the same type as the attack it will recieve the
+              Same Type Attack Bonus (STAB) which will do more damage.
+            </p>
           </section>
           <section>
             <p>Recommended pokemon</p>
