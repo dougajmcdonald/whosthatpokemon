@@ -7,7 +7,7 @@ function Button(props) {
 
   return (
     <button
-      className={`p-2 border rounded-md hover:bg-slate-300 hover:text-red-400 ${props.className}`}
+      className={`p-1 rounded-md hover:bg-slate-500 ${props.className}`}
       {...buttonProps}
       ref={ref}
     >

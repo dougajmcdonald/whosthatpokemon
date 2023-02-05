@@ -198,7 +198,7 @@ const mapPokemonStats = (stats) => {
 };
 
 const scarletVioletMoves = (moves) => {
-  console.log("moves", moves);
+  //console.log("moves", moves);
   const moveValidForScarletViolet = moves
     .filter((m) =>
       m.version_group_details.filter(
@@ -207,14 +207,11 @@ const scarletVioletMoves = (moves) => {
     )
     .map((m) => m.move.name);
 
-  console.log(moveValidForScarletViolet);
+  //console.log(moveValidForScarletViolet);
 
   return {
     moves: moveValidForScarletViolet,
   };
-  //.map((m) => m.move.name);
-  //console.log(move);
-  //console.log()
 };
 
 const getTypesFromApi = async () => {

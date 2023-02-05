@@ -50,24 +50,24 @@ export function AutoComplete(props) {
       </label>
       <div
         ref={outerRef}
-        className={`relative px-4 flex flex-row items-center rounded-md overflow-hidden shadow-sm border-2 bg-white ${
-          state.isFocused ? "border-pink-500" : "border-gray-300"
+        className={`relative px-4 flex flex-row items-center rounded-md overflow-hidden shadow-sm border-2 ${
+          state.isFocused ? "border-pink-500" : "border-yellow-300"
         }`}
       >
         <MagnifyingGlassIcon
           aria-hidden="true"
-          className="w-6 h-6 text-gray-500"
+          className="w-6 h-6 text-slate-50"
         />
         <input
           {...inputProps}
           ref={inputRef}
-          className="w-full outline-none px-3 py-3 appearance-none"
+          className="w-full outline-none px-3 py-3 appearance-none bg-transparent"
         />
         <button
           {...buttonProps}
           ref={clearButtonRef}
           style={{ visibility: state.inputValue !== "" ? "visible" : "hidden" }}
-          className="cursor-default bg-white text-gray-500 hover:text-gray-600"
+          className="cursor-default text-gray-500 hover:text-gray-600"
         >
           <XMarkIcon aria-hidden="true" className="w-6 h-6" />
         </button>
