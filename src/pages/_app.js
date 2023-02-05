@@ -1,5 +1,5 @@
 import "@/styles/globals.css";
-import { SSRProvider } from "react-aria";
+//import { SSRProvider } from "@next";
 
 export default function App({ Component, pageProps }) {
   return (
