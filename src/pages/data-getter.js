@@ -198,16 +198,18 @@ const mapPokemonStats = (stats) => {
 };
 
 const scarletVioletMoves = (moves) => {
-  //console.log("moves", moves);
+  // TODO: This filter doesn't seem to work
+  //console.log("moves", moves.length);
   const moveValidForScarletViolet = moves
-    .filter((m) =>
-      m.version_group_details.filter(
-        (vgd) => vgd.version_group.name === "scarlet-violet".length > 0
-      )
+    .filter(
+      (m) =>
+        m.version_group_details.filter(
+          (vgd) => vgd.version_group.name === "scarlet-violet"
+        ).length > 0
     )
     .map((m) => m.move.name);
 
-  //console.log(moveValidForScarletViolet);
+  //console.log("valid moves", moveValidForScarletViolet.length);
 
   return {
     moves: moveValidForScarletViolet,
@@ -276,7 +278,7 @@ const getRaidPokemonFromApi = async () => {
   //   raidPokemon.map((p) => p.name)
   // );
   const pokemon = await P.getPokemonByName(raidPokemon.map((p) => p.name));
-  //console.log("raid pokemon results", pokemon);
+  console.log("raid pokemon results", pokemon[0]);
   return pokemon.map(mapPokeApiToSomethingFuckingSane);
 };
 
@@ -285,7 +287,7 @@ const mapPokeApiToSomethingFuckingSane = (pokemon) => ({
   name: pokemon.name,
   stats: mapPokemonStats(pokemon.stats),
   moves: scarletVioletMoves(pokemon.moves),
-  types: pokemon.types.map((t) => t.name),
+  types: pokemon.types.map((t) => t.type.name),
   //abilities: pokemon.abilities,
 });
 

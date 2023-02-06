@@ -14,9 +14,17 @@ import Button from "../components/button";
 
 export default function Home({ types, raidPokemon }) {
   const [targetPokemon, setTargetPokemon] = React.useState();
+  const [teraType, setTeraType] = React.useState();
 
-  const handleSelectionChange = (pokemonName) => {
-    setTargetPokemon(pokemonName);
+  const handleSelectionChange = (id) => {
+    console.log("name", id);
+    const p = raidPokemon.find((x) => x.id === id);
+    console.log(p);
+    setTargetPokemon(p);
+  };
+
+  const handleClick = (type) => {
+    setTeraType(type);
   };
 
   return (
@@ -37,7 +45,7 @@ export default function Home({ types, raidPokemon }) {
             {types.map((type) => {
               return (
                 <li key={type.name} className="inline-block">
-                  <Button onClick={() => handleClick(type)}>
+                  <Button onPress={() => handleClick(type)}>
                     <Image
                       src={`/img/${type.name}_type.png`}
                       alt={type.name}
@@ -49,6 +57,26 @@ export default function Home({ types, raidPokemon }) {
               );
             })}
           </ul>
+        </section>
+      )}
+
+      {targetPokemon && teraType && (
+        <section className="bg-slate-800 rounded-md mt-6">
+          <header className="bg-yellow-300 text-slate-800 font-bold py-2 pl-3 capitalize rounded-t-md">
+            {targetPokemon.name}
+          </header>
+          <section>
+            {targetPokemon.types.map((t) => (
+              <Image
+                key={"type_banner_" + t}
+                src={`/img/${t}_type_banner.png`}
+                alt={t}
+                width="100"
+                height="24"
+                className="inline-block"
+              />
+            ))}
+          </section>
         </section>
       )}
     </Layout>
