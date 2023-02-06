@@ -19,12 +19,28 @@ export default function Home({ types, raidPokemon }) {
   const handleSelectionChange = (id) => {
     console.log("name", id);
     const p = raidPokemon.find((x) => x.id === id);
-    console.log(p);
-    setTargetPokemon(p);
+    const pokemonWithImage = {
+      ...p,
+      image: pokemonImageUrl(p.id),
+    };
+    console.log(pokemonWithImage);
+    setTargetPokemon(pokemonWithImage);
   };
 
   const handleClick = (type) => {
     setTeraType(type);
+  };
+
+  const pokemonImageUrl = (id) => {
+    let paddedId;
+
+    if (id.toString().length > 3) {
+      paddedId = ("0" + id).slice(-4);
+    } else {
+      paddedId = ("00" + id).slice(-3);
+    }
+
+    return `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${paddedId}.png`;
   };
 
   return (
@@ -66,10 +82,22 @@ export default function Home({ types, raidPokemon }) {
             {targetPokemon.name}
           </header>
           <section>
+            <Image
+              src={targetPokemon.image}
+              alt={targetPokemon.name}
+              width="64"
+              height="64"
+            />
+            <Image
+              src={`/img/${teraType.name}_type.png`}
+              alt={teraType.name}
+              width="48"
+              height="48"
+            />
             {targetPokemon.types.map((t) => (
               <Image
                 key={"type_banner_" + t}
-                src={`/img/${t}_type_banner.png`}
+                src={`/img/${t}_banner.png`}
                 alt={t}
                 width="100"
                 height="24"
