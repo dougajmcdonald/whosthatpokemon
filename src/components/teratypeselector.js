@@ -3,7 +3,7 @@ import Button from "../components/button";
 import Image from "next/image";
 
 export default ({ types, handleClick }) => (
-  <section>
+  <section className="flex flex-row justify-center items-center flex-grow">
     <ul className="grid grid-cols-6">
       {types.map((type) => {
         return (

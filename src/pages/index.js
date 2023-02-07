@@ -11,6 +11,7 @@ import { Item, Section } from "../components/combobox";
 import TeraTypeSelector from "../components/teratypeselector";
 import PokemonAnalysis from "../components/pokemon_analysis";
 import AttackAnalysis from "../components/attack_analysis";
+import SuitablePokemon from "../components/suitable_pokemon";
 
 export default function Home({ types, raidPokemon }) {
   const [targetPokemon, setTargetPokemon] = React.useState();
@@ -65,7 +66,8 @@ export default function Home({ types, raidPokemon }) {
       {targetPokemon && teraType && (
         <div>
           <PokemonAnalysis pokemon={targetPokemon} teraType={teraType} />
-          <AttackAnalysis pokemon={targetPokemon} teraType={teraType} />
+          <AttackAnalysis teraType={teraType} />
+          <SuitablePokemon pokemon={targetPokemon} />
         </div>
       )}
     </Layout>

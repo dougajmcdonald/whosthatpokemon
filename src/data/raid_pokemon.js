@@ -1,5 +1,8 @@
 export const raidPokemon = [
-  { name: "gengar", moves: [] },
+  {
+    name: "gengar",
+    moves: ["shadow-ball", "sludge-bomb", "dazzling-gleam", "will-o-wisp"],
+  },
   { name: "ditto", moves: [] },
   { name: "tauros", moves: [] },
   { name: "gyarados", moves: [] },

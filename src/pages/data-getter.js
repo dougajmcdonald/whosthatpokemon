@@ -279,14 +279,15 @@ const getRaidPokemonFromApi = async () => {
   // );
   const pokemon = await P.getPokemonByName(raidPokemon.map((p) => p.name));
   console.log("raid pokemon results", pokemon[0]);
-  return pokemon.map(mapPokeApiToSomethingFuckingSane);
+  const pm = pokemon.map(mapPokeApiToSomethingFuckingSane);
+  const ret = pm.forEach(async (x) => await P.getMoveByName(x.raidMoves));
 };
 
 const mapPokeApiToSomethingFuckingSane = (pokemon) => ({
   id: pokemon.id,
   name: pokemon.name,
   stats: mapPokemonStats(pokemon.stats),
-  moves: scarletVioletMoves(pokemon.moves),
+  raidMoves: raidPokemon.find((p) => p.name === pokemon.name)?.moves,
   types: pokemon.types.map((t) => t.type.name),
   //abilities: pokemon.abilities,
 });
