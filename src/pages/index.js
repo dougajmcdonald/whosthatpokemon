@@ -11,6 +11,7 @@ import Layout from "../components/layout";
 import { AutoComplete } from "../components/autocomplete";
 import { Item, Section } from "../components/combobox";
 import Button from "../components/button";
+import StatListItem from "../components/statlistitem";
 
 export default function Home({ types, raidPokemon }) {
   const [targetPokemon, setTargetPokemon] = React.useState();
@@ -82,28 +83,47 @@ export default function Home({ types, raidPokemon }) {
             {targetPokemon.name}
           </header>
           <section>
-            <Image
-              src={targetPokemon.image}
-              alt={targetPokemon.name}
-              width="64"
-              height="64"
-            />
-            <Image
-              src={`/img/${teraType.name}_type.png`}
-              alt={teraType.name}
-              width="48"
-              height="48"
-            />
-            {targetPokemon.types.map((t) => (
+            <section className="flex flex-row">
               <Image
-                key={"type_banner_" + t}
-                src={`/img/${t}_banner.png`}
-                alt={t}
-                width="100"
-                height="24"
-                className="inline-block"
+                src={targetPokemon.image}
+                alt={targetPokemon.name}
+                width="64"
+                height="64"
               />
-            ))}
+              <Image
+                src={`/img/${teraType.name}_type.png`}
+                alt={teraType.name}
+                width="48"
+                height="48"
+              />
+              {targetPokemon.types.map((t) => (
+                <Image
+                  key={"type_banner_" + t}
+                  src={`/img/${t}_banner.png`}
+                  alt={t}
+                  width="100"
+                  height="24"
+                  className="inline-block"
+                />
+              ))}
+            </section>
+            <ul className="py-1">
+              <StatListItem label="HP" value={targetPokemon.stats.hp} />
+              <StatListItem label="Speed" value={targetPokemon.stats.speed} />
+              <StatListItem
+                label="Defence"
+                value={targetPokemon.stats.defense}
+              />
+              <StatListItem
+                label="Special Defence"
+                value={targetPokemon.stats["special-defense"]}
+              />
+              <StatListItem label="Attack" value={targetPokemon.stats.attack} />
+              <StatListItem
+                label="Special Attack"
+                value={targetPokemon.stats["special-attack"]}
+              />
+            </ul>
           </section>
         </section>
       )}
