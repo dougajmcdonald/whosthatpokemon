@@ -42,10 +42,7 @@ export function AutoComplete(props) {
 
   return (
     <div className="inline-flex flex-col relative w-full">
-      <label
-        {...labelProps}
-        className="block font-bold text-gray-700 text-left mb-2"
-      >
+      <label {...labelProps} className="block font-bold text-left mb-2">
         {props.label}
       </label>
       <div

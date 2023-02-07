@@ -1,0 +1,24 @@
+import React from "react";
+import Button from "../components/button";
+import Image from "next/image";
+
+export default ({ types, handleClick }) => (
+  <section>
+    <ul className="grid grid-cols-6">
+      {types.map((type) => {
+        return (
+          <li key={type.name} className="inline-block">
+            <Button onPress={() => handleClick(type)}>
+              <Image
+                src={`/img/${type.name}_type.png`}
+                alt={type.name}
+                width="48"
+                height="48"
+              />
+            </Button>
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+);
