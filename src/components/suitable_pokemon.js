@@ -1,5 +1,7 @@
 import React from "react";
 
+import HeadedCard from "./headed_card";
+
 const getMoveData = () => {
   // get the moves from the 6* raid list for the pokemon
   // get the move data so we know the type of the attack, and also the attack type (att/sp att)
@@ -8,5 +10,14 @@ const getMoveData = () => {
 };
 
 export default ({ pokemon }) => (
-  <section>{pokemon.raidMoves.map((m) => m)}</section>
+  <HeadedCard headerText="Who should you pick?">
+    <section>
+      {pokemon.moveInfo.map((m) => (
+        <div key={m.name}>
+          {m.name}
+          {m.type}
+        </div>
+      ))}
+    </section>
+  </HeadedCard>
 );
