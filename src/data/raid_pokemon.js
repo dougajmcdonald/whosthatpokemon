@@ -56,7 +56,7 @@ export const raidPokemon = [
     name: "breloom",
     moves: ["bullet-seed", "low-sweep", "spore", "aerial-ace"],
   },
-  { name: "torkoal", moves: ["lava-plume", "yawn", "clear-smog", "body-alam"] },
+  { name: "torkoal", moves: ["lava-plume", "yawn", "clear-smog", "body-slam"] },
   {
     name: "salamence",
     moves: ["outrage", "dual-wingbeat", "flamethrower", "tera-blast"],

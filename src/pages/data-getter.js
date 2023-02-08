@@ -277,10 +277,36 @@ const getRaidPokemonFromApi = async () => {
   //   "6* raid pokemon",
   //   raidPokemon.map((p) => p.name)
   // );
+
+  // slower, but who cares it's a one off (ish)
+
+  // const pokemon = raidPokemon.map(p => {
+  //   pokemon: await P.getPokemonByName(p.name),
+  //   move
+  // })
+
   const pokemon = await P.getPokemonByName(raidPokemon.map((p) => p.name));
-  console.log("raid pokemon results", pokemon[0]);
+  //console.log("raid pokemon results", pokemon[0]);
   const pm = pokemon.map(mapPokeApiToSomethingFuckingSane);
-  const ret = pm.forEach(async (x) => await P.getMoveByName(x.raidMoves));
+  const ret = await Promise.all(
+    pm.map(async (x) => {
+      return {
+        ...x,
+        moveInfo: await (
+          await P.getMoveByName(x.raidMoves)
+        ).map((m) => {
+          return {
+            name: m.name,
+            power: m.power,
+            type: m.type.name,
+            class: m.damage_class.name,
+          };
+        }),
+      };
+    })
+  );
+  console.log("this thing", ret[0]);
+  return ret;
 };
 
 const mapPokeApiToSomethingFuckingSane = (pokemon) => ({
