@@ -301,7 +301,7 @@ const getRaidPokemonFromApi = async () => {
       })),
     }))
   );
-  console.log("this thing", ret[0]);
+  //console.log("this thing", ret[0]);
   return ret;
 };
 
