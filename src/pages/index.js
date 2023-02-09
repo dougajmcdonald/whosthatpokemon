@@ -67,7 +67,7 @@ export default function Home({ types, raidPokemon }) {
         <div>
           <PokemonAnalysis pokemon={targetPokemon} teraType={teraType} />
           <AttackAnalysis teraType={teraType} />
-          <SuitablePokemon pokemon={targetPokemon} />
+          <SuitablePokemon pokemon={targetPokemon} types={types} />
         </div>
       )}
     </Layout>

@@ -289,21 +289,17 @@ const getRaidPokemonFromApi = async () => {
   //console.log("raid pokemon results", pokemon[0]);
   const pm = pokemon.map(mapPokeApiToSomethingFuckingSane);
   const ret = await Promise.all(
-    pm.map(async (x) => {
-      return {
-        ...x,
-        moveInfo: await (
-          await P.getMoveByName(x.raidMoves)
-        ).map((m) => {
-          return {
-            name: m.name,
-            power: m.power,
-            type: m.type.name,
-            class: m.damage_class.name,
-          };
-        }),
-      };
-    })
+    pm.map(async (x) => ({
+      ...x,
+      moveInfo: await (
+        await P.getMoveByName(x.raidMoves)
+      ).map((m) => ({
+        name: m.name,
+        power: m.power,
+        type: m.type.name,
+        class: m.damage_class.name,
+      })),
+    }))
   );
   console.log("this thing", ret[0]);
   return ret;
