@@ -29,15 +29,25 @@ const getSuitablePokemon = (moves, types) => {
   const suitable = svPokemon.filter(
     (p) => !p.types.some((t) => uniqueTypes.includes(t))
   );
-  console.log(suitable);
-  return suitable.sort((s) => s.name);
+  //console.log(suitable);
+  return suitable.sort(sortNameDesc);
+};
+
+const sortNameDesc = (a, b) => {
+  if (a.name < b.name) {
+    return -1;
+  }
+  if (a.name > b.name) {
+    return 1;
+  }
+  return 0;
 };
 
 export default ({ pokemon, types }) => (
   <HeadedCard headerText="Who should you pick?">
     <section className="p-4">
       <p>Enemy is level 90, make sure your Pokemon is over level 90.</p>
-      <ul>
+      <ul className="grid grid-cols-3">
         {getSuitablePokemon(pokemon.moveInfo, types).map((p) => (
           <article
             key={p.id + p.name}
