@@ -29,7 +29,7 @@ const getSuitablePokemon = (moves, types) => {
   const suitable = svPokemon.filter(
     (p) => !p.types.some((t) => uniqueTypes.includes(t))
   );
-  //console.log(suitable);
+  console.log(suitable);
   return suitable.sort(sortNameDesc);
 };
 
