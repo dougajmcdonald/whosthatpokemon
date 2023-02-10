@@ -43,7 +43,7 @@ const sortNameDesc = (a, b) => {
   return 0;
 };
 
-export default ({ pokemon, types }) => (
+const SuitablePokemon = ({ pokemon, types }) => (
   <HeadedCard headerText="Who should you pick?">
     <section className="p-4">
       <p>Enemy is level 90, make sure your Pokemon is over level 90.</p>
@@ -82,3 +82,5 @@ export default ({ pokemon, types }) => (
     </section>
   </HeadedCard>
 );
+
+export default SuitablePokemon;

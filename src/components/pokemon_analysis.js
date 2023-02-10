@@ -3,7 +3,7 @@ import Image from "next/image";
 import StatListItem from "../components/statlistitem";
 import HeadedCard from "./headed_card";
 
-export default ({ pokemon, teraType }) => (
+const PokemonAnalysis = ({ pokemon, teraType }) => (
   <HeadedCard headerText={pokemon.name}>
     <section className="p-4">
       <section className="flex flex-row justify-center items-center gap-4">
@@ -55,3 +55,5 @@ export default ({ pokemon, teraType }) => (
     </section>
   </HeadedCard>
 );
+
+export default PokemonAnalysis;
