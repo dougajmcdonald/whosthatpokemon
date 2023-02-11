@@ -1,38 +1,38 @@
-import React, { useEffect } from "react";
-import Image from "next/image";
-import { Inter } from "@next/font/google";
-import Pokedex from "pokedex-promise-v2";
-import { filterNameToValidPokemon } from "../data/filters";
-import { svPokedex } from "../data/sv_pokemon";
+import React, { useEffect } from "react"
+import Image from "next/image"
+import { Inter } from "@next/font/google"
+import Pokedex from "pokedex-promise-v2"
+import { filterNameToValidPokemon } from "../data/filters"
+import { svPokedex } from "../data/sv_pokemon"
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"] })
 
-import Layout from "../components/layout";
-import Button from "../components/button";
-import { AutoComplete } from "../components/autocomplete";
-import { Item, Section } from "../components/combobox";
+import Layout from "../components/layout"
+import Button from "../components/button"
+import { AutoComplete } from "../components/autocomplete"
+import { Item, Section } from "../components/combobox"
 
 export default function TeraRaid({ types }) {
-  const P = new Pokedex();
+  const P = new Pokedex()
 
-  const [teraType, setTeraType] = React.useState();
-  const [targetPokemon, setTargetPokemon] = React.useState();
-  const [validMoves, setValidMoves] = React.useState();
-  const [moveTypeAccess, setMoveTypeAccess] = React.useState();
-  const [statAnalysis, setStatAnalysis] = React.useState();
-  const [recommendedPokemon, setRecommendedPokemon] = React.useState();
+  const [teraType, setTeraType] = React.useState()
+  const [targetPokemon, setTargetPokemon] = React.useState()
+  const [validMoves, setValidMoves] = React.useState()
+  const [moveTypeAccess, setMoveTypeAccess] = React.useState()
+  const [statAnalysis, setStatAnalysis] = React.useState()
+  const [recommendedPokemon, setRecommendedPokemon] = React.useState()
 
-  const handleClick = async (type) => {
-    setTeraType(type);
-    await getAcceptableTypes(type);
-  };
+  const handleClick = async type => {
+    setTeraType(type)
+    await getAcceptableTypes(type)
+  }
 
   const superEffectiveDamageTypes = (type, teraType) => {
     // check the type against those which will supereffectively dmg the
     // tera type of the raid
     const filteredResult = teraType.damage_relations.double_damage_from
-      .map((y) => y.name)
-      .includes(type.name);
+      .map(y => y.name)
+      .includes(type.name)
     // console.log(
     //   "Tera type: ",
     //   teraType.name,
@@ -40,16 +40,16 @@ export default function TeraRaid({ types }) {
     //   type.name,
     //   filteredResult
     // );
-    return filteredResult;
-  };
+    return filteredResult
+  }
 
-  const weakToStabTypes = (type) => {
+  const weakToStabTypes = type => {
     // check the type against the selected pokemon stab types
     // we can assume it has access to moves of this type and they will hurt most!
 
     const filterResult = !type.damage_relations.double_damage_from
-      .map((x) => x.name)
-      .some((x) => targetPokemon.types.map((t) => t.type.name).includes(x));
+      .map(x => x.name)
+      .some(x => targetPokemon.types.map(t => t.type.name).includes(x))
     // console.log(
     //   "input type",
     //   type,
@@ -57,50 +57,46 @@ export default function TeraRaid({ types }) {
     //   targetPokemon.types.map((t) => t.type.name),
     //   filterResult
     // );
-    return filterResult;
-  };
+    return filterResult
+  }
 
-  const getAcceptableTypes = async (type) => {
+  const getAcceptableTypes = async type => {
     const acceptableCandidates = types
-      .filter((t) => superEffectiveDamageTypes(t, type))
+      .filter(t => superEffectiveDamageTypes(t, type))
       .filter(weakToStabTypes)
-      .map((x) =>
-        x.pokemon.map((z) => z.pokemon.name).filter(filterNameToValidPokemon)
+      .map(x =>
+        x.pokemon.map(z => z.pokemon.name).filter(filterNameToValidPokemon)
       )
-      .flat();
+      .flat()
 
     //remove dupes
-    const uniqueAcceptableCandidates = [...new Set(acceptableCandidates)];
+    const uniqueAcceptableCandidates = [...new Set(acceptableCandidates)]
     //console.log("names", uniqueAcceptableCandidates);
 
     // long wait
     if (uniqueAcceptableCandidates.length > 0) {
-      const candidateData = await P.getPokemonByName(
-        uniqueAcceptableCandidates
-      );
+      const candidateData = await P.getPokemonByName(uniqueAcceptableCandidates)
       //console.log("data", candidateData);
 
-      const validMons = candidateData.filter((x) =>
+      const validMons = candidateData.filter(x =>
         x.types
-          .map((t) => t.type.name)
-          .every(
-            (x) => !targetPokemon.types.map((t) => t.type.name).includes(x)
-          )
-      );
+          .map(t => t.type.name)
+          .every(x => !targetPokemon.types.map(t => t.type.name).includes(x))
+      )
       //console.log(validMons);
-      setRecommendedPokemon(validMons);
+      setRecommendedPokemon(validMons)
     }
-  };
+  }
 
-  const physicalSpecialAnalysis = (pokemon) => {
-    const stats = pokemon.stats.map((s) => ({
+  const physicalSpecialAnalysis = pokemon => {
+    const stats = pokemon.stats.map(s => ({
       key: s.stat.name,
       base: s.base_stat,
-    }));
+    }))
 
-    const statMap = stats.map((s) => ({ [s.key]: s.base }));
+    const statMap = stats.map(s => ({ [s.key]: s.base }))
 
-    const statObj = Object.assign({}, ...statMap);
+    const statObj = Object.assign({}, ...statMap)
 
     const statAnalysis = {
       strongestAttackStat:
@@ -108,43 +104,43 @@ export default function TeraRaid({ types }) {
       weakestDefenseStat:
         statObj.defense < statObj["special-defense"] ? "physical" : "special",
       ...statObj,
-    };
+    }
 
     //console.log(statAnalysis);
-    setStatAnalysis(statAnalysis);
-  };
+    setStatAnalysis(statAnalysis)
+  }
 
-  const handleSelectionChange = async (pokemonName) => {
-    setMoveTypeAccess(null);
-    setTargetPokemon(null);
+  const handleSelectionChange = async pokemonName => {
+    setMoveTypeAccess(null)
+    setTargetPokemon(null)
     if (pokemonName) {
-      const selectedPokemon = await P.getPokemonByName(pokemonName);
+      const selectedPokemon = await P.getPokemonByName(pokemonName)
       //console.log("SelectedPokemon", selectedPokemon);
 
       const pokemonWithImage = {
         ...selectedPokemon,
         image: pokemonImageUrl(selectedPokemon.id),
-      };
+      }
 
-      setTargetPokemon(pokemonWithImage);
+      setTargetPokemon(pokemonWithImage)
 
-      physicalSpecialAnalysis(pokemonWithImage);
+      physicalSpecialAnalysis(pokemonWithImage)
 
       //moves
       //console.log("valid moves", getSVMoves(selectedPokemon.moves));
-      const validMoves = getSVMoves(selectedPokemon.moves);
+      const validMoves = getSVMoves(selectedPokemon.moves)
 
-      const moveData = await P.getMoveByName(validMoves.map((m) => m.name));
+      const moveData = await P.getMoveByName(validMoves.map(m => m.name))
 
       const damagingMoves = moveData.filter(
-        (m) => m.damage_class.name !== "status"
-      );
+        m => m.damage_class.name !== "status"
+      )
 
-      setValidMoves(damagingMoves);
+      setValidMoves(damagingMoves)
 
       const moveTypes = damagingMoves
-        .map((m) => m.type.name)
-        .filter((item, index, arr) => arr.indexOf(item) === index);
+        .map(m => m.type.name)
+        .filter((item, index, arr) => arr.indexOf(item) === index)
 
       // const groupMoveByType = damagingMoves.reduce((group, move) => {
       //   const {
@@ -157,41 +153,41 @@ export default function TeraRaid({ types }) {
 
       //console.log(groupMoveByType);
 
-      setMoveTypeAccess(moveTypes);
+      setMoveTypeAccess(moveTypes)
       //console.log(moveTypes);
 
       //console.log(damagingMoves);
     }
-  };
+  }
 
-  const pokemonImageUrl = (id) => {
-    let paddedId;
+  const pokemonImageUrl = id => {
+    let paddedId
 
     if (id.toString().length > 3) {
-      paddedId = ("0" + id).slice(-4);
+      paddedId = ("0" + id).slice(-4)
     } else {
-      paddedId = ("00" + id).slice(-3);
+      paddedId = ("00" + id).slice(-3)
     }
 
-    return `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${paddedId}.png`;
-  };
+    return `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${paddedId}.png`
+  }
 
   //const getMoveData = async (name) => await P.getMoveByName(name);
 
-  const getSVMoves = (moves) =>
+  const getSVMoves = moves =>
     moves
       .filter(
-        (m) =>
+        m =>
           m.version_group_details.filter(
-            (vgd) => vgd.version_group.name === "scarlet-violet"
+            vgd => vgd.version_group.name === "scarlet-violet"
           ).length > 0
       )
-      .map((m) => m.move);
+      .map(m => m.move)
 
-  const handleReset = (e) => {
-    setTargetPokemon(null);
-    setTeraType(null);
-  };
+  const handleReset = e => {
+    setTargetPokemon(null)
+    setTeraType(null)
+  }
 
   return (
     <Layout title="Tera raid helper">
@@ -202,7 +198,7 @@ export default function TeraRaid({ types }) {
           defaultItems={svPokedex}
           onSelectionChange={handleSelectionChange}
         >
-          {(item) => <Item>{item.name}</Item>}
+          {item => <Item>{item.name}</Item>}
         </AutoComplete>
       </section>
       {targetPokemon && moveTypeAccess && (
@@ -211,7 +207,7 @@ export default function TeraRaid({ types }) {
             What tera type is the Pokemon you&apos;re attacking?
           </p>
           <ul className="grid grid-cols-6">
-            {types.map((type) => {
+            {types.map(type => {
               return (
                 <li key={type.name} className="inline-block">
                   <Button onClick={() => handleClick(type)}>
@@ -224,7 +220,7 @@ export default function TeraRaid({ types }) {
                     <span className="text-sm capitalize">{type.name}</span>
                   </Button>
                 </li>
-              );
+              )
             })}
           </ul>
           <Button
@@ -255,7 +251,7 @@ export default function TeraRaid({ types }) {
                 <div>
                   <ul className="text-sm inline-block">
                     <li key="types" className="inline-block w-full">
-                      {targetPokemon.types.map((t) => (
+                      {targetPokemon.types.map(t => (
                         <Image
                           key={"type_banner_" + t.type.name}
                           src={`/img/${t.type.name}_type_banner.png`}
@@ -328,7 +324,7 @@ export default function TeraRaid({ types }) {
                     <h2 className="font-bold">Super-effective</h2>
                     <p className="text-sm mb-4">Attacks do double damage</p>
                     <ul>
-                      {teraType.damage_relations.double_damage_from.map((x) => (
+                      {teraType.damage_relations.double_damage_from.map(x => (
                         <li key={x.name} className="pb-1">
                           <Image
                             src={`/img/${x.name}_type_banner.png`}
@@ -344,7 +340,7 @@ export default function TeraRaid({ types }) {
                     <h2 className="font-bold">Not effective</h2>
                     <p className="text-sm mb-4">Attacks do half damage</p>
                     <ul>
-                      {teraType.damage_relations.half_damage_from.map((x) => (
+                      {teraType.damage_relations.half_damage_from.map(x => (
                         <li key={x.name} className="pb-1">
                           <Image
                             src={`/img/${x.name}_type_banner.png`}
@@ -362,7 +358,7 @@ export default function TeraRaid({ types }) {
                       <p className="text-sm mb-4">Attacks do no damage</p>
                       <ul>
                         {teraType.damage_relations.no_damage_from.length > 0 ? (
-                          teraType.damage_relations.no_damage_from.map((x) => (
+                          teraType.damage_relations.no_damage_from.map(x => (
                             <li key={x.name} className="pb-1">
                               <Image
                                 src={`/img/${x.name}_type_banner.png`}
@@ -413,7 +409,7 @@ export default function TeraRaid({ types }) {
             </p>
             <ul className="inline-block grid grid-cols-3">
               {recommendedPokemon &&
-                recommendedPokemon.map((p) => (
+                recommendedPokemon.map(p => (
                   <article
                     key={p.id + p.name}
                     className="flex justify-center items-center border border-gray-500 rounded-md py-2 m-2 w-auto"
@@ -430,8 +426,8 @@ export default function TeraRaid({ types }) {
                       <p className="font-bold capitalize">{p.name}</p>
                       <ul>
                         {p.types
-                          .filter((t) => t.type.name !== "unknown")
-                          .map((t) => (
+                          .filter(t => t.type.name !== "unknown")
+                          .map(t => (
                             <li key={p.id + t.type.name}>
                               {" "}
                               <Image
@@ -473,30 +469,30 @@ export default function TeraRaid({ types }) {
       )}
       <hr />
     </Layout>
-  );
+  )
 }
 
 export const getStaticProps = async () => {
-  const P = new Pokedex();
+  const P = new Pokedex()
 
-  const { results } = await P.getTypesList();
+  const { results } = await P.getTypesList()
   const typeData = await Promise.all(
     results
-      .filter((type) => type.name !== "unknown" && type.name !== "shadow")
-      .map(async (r) => {
+      .filter(type => type.name !== "unknown" && type.name !== "shadow")
+      .map(async r => {
         //console.log(r);
-        const typeInfo = await P.getTypeByName(r.name);
+        const typeInfo = await P.getTypeByName(r.name)
         //console.log(typeInfo.damage_relations);
         return {
           name: r.name,
           damage_relations: typeInfo.damage_relations,
           pokemon: typeInfo.pokemon,
-        };
+        }
       })
-  );
+  )
 
   //console.log(typeData);
   return {
     props: { types: typeData },
-  };
-};
+  }
+}

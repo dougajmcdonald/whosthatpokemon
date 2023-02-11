@@ -1,21 +1,21 @@
-import * as React from "react";
-import { useComboBoxState, useSearchFieldState } from "react-stately";
-import { useComboBox, useFilter, useButton, useSearchField } from "react-aria";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
-import { XMarkIcon } from "@heroicons/react/24/solid";
+import * as React from "react"
+import { useComboBoxState, useSearchFieldState } from "react-stately"
+import { useComboBox, useFilter, useButton, useSearchField } from "react-aria"
+import { MagnifyingGlassIcon } from "@heroicons/react/24/solid"
+import { XMarkIcon } from "@heroicons/react/24/solid"
 
-import { ListBox } from "./listbox";
-import { Popover } from "./popover";
+import { ListBox } from "./listbox"
+import { Popover } from "./popover"
 
-export { Item } from "react-stately";
+export { Item } from "react-stately"
 
 export function AutoComplete(props) {
-  let { contains } = useFilter({ sensitivity: "base" });
-  let state = useComboBoxState({ ...props, defaultFilter: contains });
+  let { contains } = useFilter({ sensitivity: "base" })
+  let state = useComboBoxState({ ...props, defaultFilter: contains })
 
-  let inputRef = React.useRef(null);
-  let listBoxRef = React.useRef(null);
-  let popoverRef = React.useRef(null);
+  let inputRef = React.useRef(null)
+  let listBoxRef = React.useRef(null)
+  let popoverRef = React.useRef(null)
 
   let { inputProps, listBoxProps, labelProps } = useComboBox(
     {
@@ -25,20 +25,20 @@ export function AutoComplete(props) {
       popoverRef,
     },
     state
-  );
+  )
 
   // Get props for the clear button from useSearchField
   let searchProps = {
     label: props.label,
     value: state.inputValue,
-    onChange: (v) => state.setInputValue(v),
-  };
+    onChange: v => state.setInputValue(v),
+  }
 
-  let searchState = useSearchFieldState(searchProps);
-  let { clearButtonProps } = useSearchField(searchProps, searchState, inputRef);
-  let clearButtonRef = React.useRef(null);
-  let { buttonProps } = useButton(clearButtonProps, clearButtonRef);
-  let outerRef = React.useRef(null);
+  let searchState = useSearchFieldState(searchProps)
+  let { clearButtonProps } = useSearchField(searchProps, searchState, inputRef)
+  let clearButtonRef = React.useRef(null)
+  let { buttonProps } = useButton(clearButtonProps, clearButtonRef)
+  let outerRef = React.useRef(null)
 
   return (
     <div className="inline-flex flex-col relative w-full">
@@ -82,5 +82,5 @@ export function AutoComplete(props) {
         </Popover>
       )}
     </div>
-  );
+  )
 }

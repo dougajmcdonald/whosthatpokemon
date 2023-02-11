@@ -1,5 +1,5 @@
-import Head from "next/head";
-import React from "react";
+import Head from "next/head"
+import React from "react"
 
 const HeadedCard = ({ headerText, children }) => (
   <section className="bg-slate-800 rounded-md mt-6 pb-4">
@@ -8,6 +8,6 @@ const HeadedCard = ({ headerText, children }) => (
     </header>
     {children}
   </section>
-);
+)
 
-export default HeadedCard;
+export default HeadedCard

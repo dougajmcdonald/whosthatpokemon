@@ -229,4 +229,4 @@ export const raidPokemon = [
     name: "baxcalibur",
     moves: ["icicle-spear", "dragon-rush", "snowscape", "body-press"],
   },
-];
+]

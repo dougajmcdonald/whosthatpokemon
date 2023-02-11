@@ -1,11 +1,11 @@
-import * as React from "react";
-import { useListBox, useListBoxSection, useOption } from "react-aria";
-import { CheckIcon } from "@heroicons/react/24/solid";
+import * as React from "react"
+import { useListBox, useListBoxSection, useOption } from "react-aria"
+import { CheckIcon } from "@heroicons/react/24/solid"
 
 export function ListBox(props) {
-  let ref = React.useRef(null);
-  let { listBoxRef = ref, state } = props;
-  let { listBoxProps } = useListBox(props, state, listBoxRef);
+  let ref = React.useRef(null)
+  let { listBoxRef = ref, state } = props
+  let { listBoxProps } = useListBox(props, state, listBoxRef)
 
   return (
     <ul
@@ -13,7 +13,7 @@ export function ListBox(props) {
       ref={listBoxRef}
       className="w-full max-h-72 overflow-auto outline-none"
     >
-      {[...state.collection].map((item) =>
+      {[...state.collection].map(item =>
         item.type === "section" ? (
           <ListBoxSection key={item.key} section={item} state={state} />
         ) : (
@@ -21,14 +21,14 @@ export function ListBox(props) {
         )
       )}
     </ul>
-  );
+  )
 }
 
 function ListBoxSection({ section, state }) {
   let { itemProps, headingProps, groupProps } = useListBoxSection({
     heading: section.rendered,
     "aria-label": section["aria-label"],
-  });
+  })
 
   return (
     <>
@@ -42,30 +42,30 @@ function ListBoxSection({ section, state }) {
           </span>
         )}
         <ul {...groupProps}>
-          {[...section.childNodes].map((node) => (
+          {[...section.childNodes].map(node => (
             <Option key={node.key} item={node} state={state} />
           ))}
         </ul>
       </li>
     </>
-  );
+  )
 }
 
 function Option({ item, state }) {
-  let ref = React.useRef(null);
+  let ref = React.useRef(null)
   let { optionProps, isDisabled, isSelected, isFocused } = useOption(
     {
       key: item.key,
     },
     state,
     ref
-  );
+  )
 
-  let text = "text-gray-700";
+  let text = "text-gray-700"
   if (isFocused || isSelected) {
-    text = "text-pink-600";
+    text = "text-pink-600"
   } else if (isDisabled) {
-    text = "text-gray-200";
+    text = "text-gray-200"
   }
 
   return (
@@ -81,5 +81,5 @@ function Option({ item, state }) {
         <CheckIcon aria-hidden="true" className="w-5 h-5 text-pink-600" />
       )}
     </li>
-  );
+  )
 }

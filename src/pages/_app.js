@@ -1,4 +1,4 @@
-import "@/styles/globals.css";
+import "@/styles/globals.css"
 //import { SSRProvider } from "@next";
 
 export default function App({ Component, pageProps }) {
@@ -10,5 +10,5 @@ export default function App({ Component, pageProps }) {
     //<SSRProvider>
     <Component {...pageProps} />
     //</SSRProvider>
-  );
+  )
 }

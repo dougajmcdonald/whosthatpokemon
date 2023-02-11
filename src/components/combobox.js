@@ -1,21 +1,21 @@
-import * as React from "react";
-import { useComboBoxState } from "react-stately";
-import { useComboBox, useFilter, useButton } from "react-aria";
-import { ChevronDownIcon } from "@heroicons/react/solid";
+import * as React from "react"
+import { useComboBoxState } from "react-stately"
+import { useComboBox, useFilter, useButton } from "react-aria"
+import { ChevronDownIcon } from "@heroicons/react/solid"
 
-import { ListBox } from "./listbox";
-import { Popover } from "./popover";
+import { ListBox } from "./listbox"
+import { Popover } from "./popover"
 
-export { Item, Section } from "react-stately";
+export { Item, Section } from "react-stately"
 
 export function ComboBox(props) {
-  let { contains } = useFilter({ sensitivity: "base" });
-  let state = useComboBoxState({ ...props, defaultFilter: contains });
+  let { contains } = useFilter({ sensitivity: "base" })
+  let state = useComboBoxState({ ...props, defaultFilter: contains })
 
-  let buttonRef = React.useRef(null);
-  let inputRef = React.useRef(null);
-  let listBoxRef = React.useRef(null);
-  let popoverRef = React.useRef(null);
+  let buttonRef = React.useRef(null)
+  let inputRef = React.useRef(null)
+  let listBoxRef = React.useRef(null)
+  let popoverRef = React.useRef(null)
 
   let {
     buttonProps: triggerProps,
@@ -31,9 +31,9 @@ export function ComboBox(props) {
       popoverRef,
     },
     state
-  );
+  )
 
-  let { buttonProps } = useButton(triggerProps, buttonRef);
+  let { buttonProps } = useButton(triggerProps, buttonRef)
 
   return (
     <div className="inline-flex flex-col relative w-52">
@@ -78,5 +78,5 @@ export function ComboBox(props) {
         </Popover>
       )}
     </div>
-  );
+  )
 }

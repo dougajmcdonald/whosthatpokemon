@@ -1,9 +1,9 @@
-import * as React from "react";
-import { usePopover, DismissButton, Overlay } from "@react-aria/overlays";
+import * as React from "react"
+import { usePopover, DismissButton, Overlay } from "@react-aria/overlays"
 
 export function Popover(props) {
-  let ref = React.useRef(null);
-  let { popoverRef = ref, state, children, className, isNonModal } = props;
+  let ref = React.useRef(null)
+  let { popoverRef = ref, state, children, className, isNonModal } = props
 
   let { popoverProps, underlayProps } = usePopover(
     {
@@ -11,7 +11,7 @@ export function Popover(props) {
       popoverRef,
     },
     state
-  );
+  )
 
   return (
     <Overlay>
@@ -26,5 +26,5 @@ export function Popover(props) {
         <DismissButton onDismiss={state.close} />
       </div>
     </Overlay>
-  );
+  )
 }

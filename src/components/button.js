@@ -1,9 +1,9 @@
-import React from "react";
-import { useButton } from "react-aria";
+import React from "react"
+import { useButton } from "react-aria"
 
 function Button(props) {
-  let ref = React.useRef();
-  let { buttonProps } = useButton(props, ref);
+  let ref = React.useRef()
+  let { buttonProps } = useButton(props, ref)
 
   return (
     <button
@@ -13,7 +13,7 @@ function Button(props) {
     >
       {props.children}
     </button>
-  );
+  )
 }
 
-export default Button;
+export default Button
