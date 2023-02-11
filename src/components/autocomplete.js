@@ -76,7 +76,7 @@ export function AutoComplete(props) {
           state={state}
           isNonModal
           placement="bottom start"
-          className="w-72"
+          className="w-full p-2"
         >
           <ListBox {...listBoxProps} listBoxRef={listBoxRef} state={state} />
         </Popover>
