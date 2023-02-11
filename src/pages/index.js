@@ -49,7 +49,19 @@ export default function Home({ types, raidPokemon }) {
   return (
     <Layout title="Who's that Pokemon">
       <h1 className="text-4xl mb-8 text-center">Who&apos;s that Pokemon</h1>
-
+      <section className="mb-4 text-sm text-slate-400">
+        <p className="inline-block">
+          Who&apos;s that Pokemon helps your find the right pokemon for raids so
+          you can spend your time battling, not reloading.
+        </p>
+        <p className="inline-block">
+          (This is a Beta version that only lists 6* raid Pokemon,{" "}
+          <Link href="/contact" className="text-yellow-300 font-bold">
+            Contact us
+          </Link>{" "}
+          if you&apos;d like to see more)
+        </p>
+      </section>
       <section className="rounded-md mb-4">
         <AutoComplete
           label="Which Pokemon are you fighting?"
