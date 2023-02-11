@@ -39,20 +39,43 @@ const getSuitablePokemon = (moves, types, teraType) => {
   // pokemon who have access to moves with super effective dmg against the target
   const superEffectiveTypes = getSuperEffective(teraType.damage_relations)
   //console.log(superEffectiveTypes)
-  const superEffective = suitable.filter(p => {
-    //console.log(p.moveInfo.map(t => t.type))
-    return p.moveInfo.some(m =>
-      superEffectiveTypes.map(t => t.name).includes(m.type)
-    )
-  })
+  const superEffective = suitable
+    .filter(p => {
+      //console.log(p.moveInfo.map(t => t.type))
+      return p.moveInfo
+        .filter(m => m.class !== "status")
+        .some(m => superEffectiveTypes.map(t => t.name).includes(m.type))
+    })
+    .map(p => ({
+      ...p,
+      seMoves: p.moveInfo.filter(
+        m =>
+          superEffectiveTypes.map(t => t.name).includes(m.type) &&
+          m.class !== "status"
+      ),
+      seStabMoves: p.moveInfo.filter(
+        m =>
+          superEffectiveTypes.map(t => t.name).includes(m.type) &&
+          m.class !== "status" &&
+          p.types.includes(m.type)
+      ),
+    }))
 
-  console.log("super eff", superEffective.length)
+  const superEffectiveStab = superEffective.filter(
+    p => p.seStabMoves.length > 0
+  )
+
+  console.log("super eff", superEffectiveStab[0])
 
   // list the dmging moves you want
+  // const seMoves = superEffective
+  //   .map(m => superEffectiveTypes.map(t => t.name).includes(m.type))
+  //   .map(p => p.moveInfo.map(i => i.name))
+  // console.log("se moves", seMoves)
 
   // prioritise the moves that are super effective and hit against the weakest defence type of the target pokemon
 
-  return superEffective.sort(sortNameDesc)
+  return superEffectiveStab.sort(sortNameDesc)
 }
 
 const sortNameDesc = (a, b) => {
@@ -69,35 +92,46 @@ const SuitablePokemon = ({ pokemon, types, teraType }) => (
   <HeadedCard headerText="Who should you pick?">
     <section className="p-4">
       <p>Enemy is level 90, make sure your Pokemon is over level 90.</p>
-      <ul className="grid grid-cols-3">
+      <ul className="grid grid-cols-2">
         {getSuitablePokemon(pokemon.moveInfo, types, teraType).map(p => (
           <article
             key={p.id + p.name}
-            className="flex justify-center items-center border border-gray-500 rounded-md py-2 m-2 w-auto"
+            className="flex flex-col border border-gray-500 rounded-md p-2 m-2 w-auto"
           >
-            <div>
-              <Image
-                src={pokemonImageUrl(p.id)}
-                alt={p.name}
-                width="64"
-                height="64"
-              />
+            <p className="font-bold text-sm capitalize mb-2">{p.name}</p>
+            <div className="flex flex-row">
+              <section className="mr-3 w-24">
+                <Image
+                  src={pokemonImageUrl(p.id)}
+                  alt={p.name}
+                  width="64"
+                  height="64"
+                />
+                <ul>
+                  {p.types.map(t => (
+                    <li key={p.id + t} className="py-1">
+                      <Image
+                        src={`/img/${t}_banner.png`}
+                        alt={t}
+                        width="66"
+                        height="16"
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </section>
+
+              <section className="ml-2">
+                <p className="font-bold">Super effective STAB moves</p>
+                <ul>
+                  {p.seStabMoves.map(move => (
+                    <li className="text-sm" key={move.name}>
+                      {move.name}
+                    </li>
+                  ))}
+                </ul>
+              </section>
             </div>
-            <section>
-              <p className="font-bold capitalize">{p.name}</p>
-              <ul>
-                {p.types.map(t => (
-                  <li key={p.id + t}>
-                    <Image
-                      src={`/img/${t}_banner.png`}
-                      alt={t}
-                      width="66"
-                      height="16"
-                    />
-                  </li>
-                ))}
-              </ul>
-            </section>
           </article>
         ))}
       </ul>
