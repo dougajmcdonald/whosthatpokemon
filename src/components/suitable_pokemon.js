@@ -121,8 +121,17 @@ const SuitablePokemon = ({ pokemon, types, teraType }) => (
                 <p className="font-bold">Super effective STAB moves</p>
                 <ul>
                   {p.seStabMoves.map(move => (
-                    <li className="text-sm" key={move.name}>
-                      {move.name}
+                    <li key={move.name} className="flex flex-row mb-1">
+                      <Image
+                        src={`/img/${move.type}_type.png`}
+                        alt={move.type}
+                        width="24"
+                        height="24"
+                        className="mr-2"
+                      />
+                      <p className="capitalize text-sm">
+                        {move.name.replace("-", " ")}
+                      </p>
                     </li>
                   ))}
                 </ul>

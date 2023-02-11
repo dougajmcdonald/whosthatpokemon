@@ -110,37 +110,12 @@ const scarletVioletMoves = moves => {
 const getTypesFromApi = async () => {
   const P = new Pokedex()
 
-  // const { results: typeList } = await P.getTypesList();
-
-  // console.log("typeList", typeList);
-
-  // console.log(
-  //   "list input",
-  //   typeList
-  //     .filter((type) => type.name !== "unknown" && type.name !== "shadow")
-  //     .map((t) => t.name)
-  // );
-  // // get the valid types
-  // const typenameArray = typeList
-  //   .filter((type) => type.name !== "unknown" && type.name !== "shadow")
-  //   .map((t) => t.name);
-
-  // const { results } = await P.getTypeByName(typenameArray);
-
-  // console.log(results);
-
-  // const formattedTypeData = results.map((type) => {
-  //   type.name, type.damage_relations;
-  // });
-
   const { results } = await P.getTypesList()
   const typeData = await Promise.all(
     results
       .filter(type => type.name !== "unknown" && type.name !== "shadow")
       .map(async r => {
-        //console.log(r);
         const typeInfo = await P.getTypeByName(r.name)
-        //console.log(typeInfo.damage_relations);
         return {
           name: r.name,
           damage_relations: typeInfo.damage_relations,
@@ -157,44 +132,17 @@ const getAllPokemonFromApi = async () => {
     timeout: 30 * 1000, // 50s
   }
   const P = new Pokedex(options)
-  // console.log("all sv pokemon", svPokedexFinalEvolutions);
+
   const pokemon = await P.getPokemonByName(
     svPokedexFinalEvolutions.map(p => p.name)
   )
-  console.log("got all pokemon from API")
-  //console.log("all pokemon results", pokemon[0].moves[0]);
+
   const pm = pokemon.map(mapPokeApiToSomethingFuckingSane)
-  console.log("mapped all pokemon results")
-  console.log("starting to get move data")
-  const ret = await appendMoveData(pm, "moves")
-  console.log("finished getting move data", ret[0])
-  return ret
-}
 
-const moveDataPerPokemon = async moves => {
-  const options = {
-    timeout: 30 * 1000, // 50s
-  }
-  const P = new Pokedex(options)
-
-  //console.log("moves", moves);
-
-  const mv = await P.getMoveByName(moves).map(m => ({
-    name: m.name,
-    power: m.power,
-    type: m.type.name,
-    class: m.damage_class.name,
-  }))
-
-  //console.log("mv", moveData)
-
-  return moveData
+  return await appendMoveData(pm, "moves")
 }
 
 const appendMoveData = async (pokemon, movesProperty) => {
-  console.log(`getting moves for ${pokemon.length} pokemon`)
-  console.log("example data", pokemon[0][movesProperty])
-
   const options = {
     timeout: 60 * 1000, // 50s
   }
@@ -218,21 +166,21 @@ const appendMoveData = async (pokemon, movesProperty) => {
     console.log(element.name, " done.")
   }
 
-  const ret = await Promise.all(
-    pokemon.map(async x => {
-      const data = await P.getMoveByName(x[movesProperty])
-      //console.log("dataz", data)
-      return {
-        ...x,
-        moveInfo: data.map(m => ({
-          name: m.name,
-          power: m.power,
-          type: m.type.name,
-          class: m.damage_class.name,
-        })),
-      }
-    })
-  )
+  // const ret = await Promise.all(
+  //   pokemon.map(async x => {
+  //     const data = await P.getMoveByName(x[movesProperty])
+  //     //console.log("dataz", data)
+  //     return {
+  //       ...x,
+  //       moveInfo: data.map(m => ({
+  //         name: m.name,
+  //         power: m.power,
+  //         type: m.type.name,
+  //         class: m.damage_class.name,
+  //       })),
+  //     }
+  //   })
+  // )
 
   //const awaited = Promise.all(ret)
 
@@ -288,16 +236,16 @@ const mapPokeApiToSomethingFuckingSane = pokemon => ({
 
 export const getStaticProps = async () => {
   //get type data
-  //const typeJson = await getTypesFromApi()
-  //await saveJsonToFile(typeJson, "types.json")
+  const typeJson = await getTypesFromApi()
+  await saveJsonToFile(typeJson, "types.json")
 
   // get all pokemon data
   const allPokemonJson = await getAllPokemonFromApi()
   await saveJsonToFile(allPokemonJson, "all_pokemon.json")
 
   // get 6* raid pokemon data
-  // const sixStarRaidPokemonJson = await getRaidPokemonFromApi();
-  // await saveJsonToFile(sixStarRaidPokemonJson, "six_star_raid_pokemon.json");
+  const sixStarRaidPokemonJson = await getRaidPokemonFromApi()
+  await saveJsonToFile(sixStarRaidPokemonJson, "six_star_raid_pokemon.json")
 
   return {
     props: {},
