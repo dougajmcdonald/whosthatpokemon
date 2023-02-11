@@ -87,16 +87,25 @@ const sortNameDesc = (a, b) => {
 const SuitablePokemon = ({ pokemon, types, teraType }) => (
   <HeadedCard headerText="Who should you pick?">
     <section className="p-4">
-      <p>Enemy is level 90, make sure your Pokemon is over level 90.</p>
+      <section className="pb-4">
+        <p>Enemy is level 90, make sure your Pokemon is over level 90.</p>
+        <p>
+          The list below are Pokemon who aren&apos;t vulnerable to the raid
+          attacks.
+        </p>
+        <p>
+          The moves listed will deal Super-effective damage to the raid Pokemon.
+        </p>
+      </section>
       <ul className="grid grid-cols-2">
         {getSuitablePokemon(pokemon.moveInfo, types, teraType).map(p => (
           <article
             key={p.id + p.name}
-            className="flex flex-col border border-gray-500 rounded-md p-2 m-2 w-auto"
+            className="flex flex-col border border-gray-500 rounded-md p-2 mr-2 mb-2 w-auto"
           >
             <p className="font-bold text-sm capitalize mb-2">{p.name}</p>
-            <div className="flex flex-row">
-              <section className="mr-3 w-24">
+            <div className="flex flex-col">
+              <section className="flex mb-2">
                 <Image
                   src={pokemonImageUrl(p.id)}
                   alt={p.name}
@@ -118,7 +127,6 @@ const SuitablePokemon = ({ pokemon, types, teraType }) => (
               </section>
 
               <section className="ml-2">
-                <p className="font-bold">Super effective STAB moves</p>
                 <ul>
                   {p.seStabMoves.map(move => (
                     <li key={move.name} className="flex flex-row mb-1">

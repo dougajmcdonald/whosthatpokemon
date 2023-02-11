@@ -48,9 +48,13 @@ export default function Home({ types, raidPokemon }) {
   return (
     <Layout title="Who's that Pokemon">
       <h1 className="text-4xl mb-8 text-center">Who&apos;s that Pokemon</h1>
+      <p className="text-sm mb-4 text-slate-200">
+        Who&apos;s that Pokemon helps your find the right pokemon for raids so
+        you can spend your time battling, not reloading.
+      </p>
       <section className="rounded-md mb-4">
         <AutoComplete
-          label="Which Pokemon is the raid for?"
+          label="Which Pokemon are you fighting?"
           defaultItems={raidPokemon}
           onSelectionChange={handleSelectionChange}
         >
@@ -64,7 +68,7 @@ export default function Home({ types, raidPokemon }) {
       {targetPokemon && teraType && (
         <div>
           <PokemonAnalysis pokemon={targetPokemon} teraType={teraType} />
-          <AttackAnalysis teraType={teraType} />
+          {/* <AttackAnalysis teraType={teraType} /> */}
           <SuitablePokemon
             pokemon={targetPokemon}
             types={types}
