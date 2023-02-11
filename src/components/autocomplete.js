@@ -47,7 +47,7 @@ export function AutoComplete(props) {
       </label>
       <div
         ref={outerRef}
-        className={`relative px-4 flex flex-row items-center rounded-md overflow-hidden shadow-sm border-2 ${
+        className={`relative px-4 flex flex-row items-center rounded-md overflow-hidden border-2 ${
           state.isFocused ? "border-pink-500" : "border-yellow-300"
         }`}
       >
