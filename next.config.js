@@ -11,6 +11,6 @@ const nextConfig = {
     ],
   },
   staticPageGenerationTimeout: 120,
-};
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig

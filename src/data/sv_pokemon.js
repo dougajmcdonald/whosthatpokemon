@@ -400,7 +400,7 @@ export const scarletVioletPokedex = [
   "iron-valiant",
   "koraidon",
   "miraidon",
-];
+]
 
 export const svPokedex = [
   { id: "sprigatito", name: "sprigatito" },
@@ -804,7 +804,7 @@ export const svPokedex = [
   { id: "iron-valiant", name: "iron-valiant" },
   { id: "koraidon", name: "koraidon" },
   { id: "miraidon", name: "miraidon" },
-];
+]
 
 export const svPokedexFinalEvolutions = [
   { id: "meowscarada", name: "meowscarada" },
@@ -1036,4 +1036,4 @@ export const svPokedexFinalEvolutions = [
   { id: "iron-valiant", name: "iron-valiant" },
   { id: "koraidon", name: "koraidon" },
   { id: "miraidon", name: "miraidon" },
-];
+]
