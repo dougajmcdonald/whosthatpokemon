@@ -87,14 +87,18 @@ const sortNameDesc = (a, b) => {
 const SuitablePokemon = ({ pokemon, types, teraType }) => (
   <HeadedCard headerText="Who should you pick?">
     <section className="p-4">
-      <section className="pb-4">
-        <p>Enemy is level 90, make sure your Pokemon is over level 90.</p>
-        <p>
+      <section className="pb-4 text-sm text-slate-300">
+        <p className="pb-2">
           The list below are Pokemon who aren&apos;t vulnerable to the raid
-          attacks.
+          attacks so you shouldn&apos;t get squished.
         </p>
-        <p>
-          The moves listed will deal Super-effective damage to the raid Pokemon.
+        <p className="pb-2">
+          The moves listed will deal Super-effective damage to the raid Pokemon
+          so make sure you have some of these in your build.
+        </p>
+        <p className="pb-2">
+          6* raid Pokemon are level 90, make sure your Pokemon is over level 90,
+          ideally level 100.
         </p>
       </section>
       <ul className="grid grid-cols-2">
@@ -103,23 +107,23 @@ const SuitablePokemon = ({ pokemon, types, teraType }) => (
             key={p.id + p.name}
             className="flex flex-col border border-gray-500 rounded-md p-2 mr-2 mb-2 w-auto"
           >
-            <p className="font-bold text-sm capitalize mb-2">{p.name}</p>
+            <p className="font-bold capitalize mb-4">{p.name}</p>
             <div className="flex flex-col">
-              <section className="flex mb-2">
+              <section className="flex mb-4">
                 <Image
                   src={pokemonImageUrl(p.id)}
                   alt={p.name}
                   width="64"
                   height="64"
                 />
-                <ul>
+                <ul className="ml-1">
                   {p.types.map(t => (
                     <li key={p.id + t} className="py-1">
                       <Image
                         src={`/img/${t}_banner.png`}
                         alt={t}
-                        width="66"
-                        height="16"
+                        width="100"
+                        height="24"
                       />
                     </li>
                   ))}
