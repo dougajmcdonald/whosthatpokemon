@@ -62,7 +62,7 @@ export default function Home({ types, raidPokemon }) {
           if you&apos;d like to see more)
         </p>
       </section>
-      <section className="rounded-md mb-4">
+      <section className="rounded-md mb-4 relative">
         <AutoComplete
           label="Which Pokemon are you fighting?"
           defaultItems={raidPokemon}
