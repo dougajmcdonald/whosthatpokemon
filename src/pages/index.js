@@ -18,14 +18,12 @@ export default function Home({ types, raidPokemon }) {
   const [teraType, setTeraType] = React.useState()
 
   const handleSelectionChange = id => {
-    console.log("name", id)
     const p = raidPokemon.find(x => x.id === id)
     if (p) {
       const pokemonWithImage = {
         ...p,
         image: pokemonImageUrl(p.id),
       }
-      console.log(pokemonWithImage)
       setTargetPokemon(pokemonWithImage)
     }
   }

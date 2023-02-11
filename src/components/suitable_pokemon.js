@@ -34,8 +34,6 @@ const getSuitablePokemon = (moves, types, teraType) => {
     p => !p.types.some(t => uniqueTypes.includes(t))
   )
 
-  console.log("non vulnerable", suitable.length)
-
   // pokemon who have access to moves with super effective dmg against the target
   const superEffectiveTypes = getSuperEffective(teraType.damage_relations)
   //console.log(superEffectiveTypes)
@@ -64,8 +62,6 @@ const getSuitablePokemon = (moves, types, teraType) => {
   const superEffectiveStab = superEffective.filter(
     p => p.seStabMoves.length > 0
   )
-
-  console.log("super eff", superEffectiveStab[0])
 
   // list the dmging moves you want
   // const seMoves = superEffective
