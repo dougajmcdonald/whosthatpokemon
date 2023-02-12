@@ -1,7 +1,7 @@
 import * as React from "react"
 import { useComboBoxState } from "react-stately"
 import { useComboBox, useFilter, useButton } from "react-aria"
-import { ChevronDownIcon } from "@heroicons/react/solid"
+import { ChevronDownIcon } from "@heroicons/react/24/solid"
 
 import { ListBox } from "./listbox"
 import { Popover } from "./popover"
@@ -36,33 +36,36 @@ export function ComboBox(props) {
   let { buttonProps } = useButton(triggerProps, buttonRef)
 
   return (
-    <div className="inline-flex flex-col relative w-64">
+    <div className="inline-flex flex-col relative w-full">
       <label
         {...labelProps}
-        className="block text-sm font-medium text-gray-700 text-left"
+        className="block font-bold text-slate-50 text-left mb-2"
       >
         {props.label}
       </label>
       <div
-        className={`relative flex flex-row rounded-md overflow-hidden shadow-sm border-2 ${
-          state.isFocused ? "border-pink-500" : "border-gray-300"
+        className={`relative flex flex-row rounded-md overflow-hidden border-2 bg-slate-900 ${
+          state.isFocused ? "border-pink-500" : "border-yellow-300"
         }`}
       >
         <input
           {...inputProps}
           ref={inputRef}
-          className="outline-none px-3 py-1 w-full"
+          className="outline-none px-3 py-3 w-full text-slate-50 bg-slate-900"
         />
         <button
           {...buttonProps}
           ref={buttonRef}
-          className={`px-1 bg-gray-100 cursor-default border-l-2 ${
+          className={`px-1 bg-slate-900 cursor-default border-l-2 ${
             state.isFocused
               ? "border-pink-500 text-pink-600"
               : "border-gray-300 text-gray-500"
           }`}
         >
-          <ChevronDownIcon className="w-5 h-5" aria-hidden="true" />
+          <ChevronDownIcon
+            className="w-8 h-5 text-slate-50"
+            aria-hidden="true"
+          />
         </button>
       </div>
       {state.isOpen && (
@@ -72,7 +75,7 @@ export function ComboBox(props) {
           state={state}
           isNonModal
           placement="bottom start"
-          className="w-52"
+          className="w-96"
         >
           <ListBox {...listBoxProps} listBoxRef={listBoxRef} state={state} />
         </Popover>

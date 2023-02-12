@@ -6,6 +6,8 @@ import raidPokemon from "../../six_star_raid_pokemon.json"
 const inter = Inter({ subsets: ["latin"] })
 
 import Layout from "../components/layout"
+//import SearchPokemon from "../components/search_pokemon"
+import { ComboBox } from "../components/combobox"
 import { AutoComplete } from "../components/autocomplete"
 import { Item, Section } from "../components/combobox"
 import TeraTypeSelector from "../components/teratypeselector"
@@ -19,7 +21,9 @@ export default function Home({ types, raidPokemon }) {
   const [teraType, setTeraType] = React.useState()
 
   const handleSelectionChange = id => {
+    console.log("doing it", id)
     const p = raidPokemon.find(x => x.id === id)
+    console.log("found", p)
     if (p) {
       const pokemonWithImage = {
         ...p,
@@ -46,6 +50,16 @@ export default function Home({ types, raidPokemon }) {
     return `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${paddedId}.png`
   }
 
+  const sortNameDesc = (a, b) => {
+    if (a.name < b.name) {
+      return -1
+    }
+    if (a.name > b.name) {
+      return 1
+    }
+    return 0
+  }
+
   return (
     <Layout title="Who's that Pokemon">
       <h1 className="text-3xl mb-4">Raid helper</h1>
@@ -54,22 +68,15 @@ export default function Home({ types, raidPokemon }) {
           Who&apos;s that Pokemon helps your find the right pokemon for raids so
           you can spend your time battling, not reloading.
         </p>
-        <p>
-          (This is a Beta version that only lists 6* raid Pokemon,{" "}
-          <Link href="/contact" className="text-yellow-300 font-bold inline">
-            Contact us
-          </Link>{" "}
-          if you&apos;d like to see more)
-        </p>
       </section>
-      <section className="rounded-md mb-4">
-        <AutoComplete
-          label="Which Pokemon are you fighting?"
-          defaultItems={raidPokemon}
+      <section className="rounded-md mb-4 capitalize">
+        <ComboBox
+          label="What Pokemon is this raid for?"
+          defaultItems={raidPokemon.sort(sortNameDesc)}
           onSelectionChange={handleSelectionChange}
         >
-          {item => <Item className="capitalize">{item.name}</Item>}
-        </AutoComplete>
+          {item => <Item>{item.name}</Item>}
+        </ComboBox>
       </section>
       {targetPokemon && (
         <TeraTypeSelector types={types} handleClick={handleClick} />
@@ -86,6 +93,15 @@ export default function Home({ types, raidPokemon }) {
           />
         </div>
       )}
+      <footer className="mt-8 text-sm">
+        <p>
+          (This is a Beta version that only lists 6* raid Pokemon,{" "}
+          <Link href="/contact" className="text-yellow-300 font-bold inline">
+            Contact us
+          </Link>{" "}
+          if you&apos;d like to see more)
+        </p>
+      </footer>
     </Layout>
   )
 }

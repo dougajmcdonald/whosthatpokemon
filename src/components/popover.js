@@ -15,11 +15,11 @@ export function Popover(props) {
 
   return (
     <Overlay>
-      {!isNonModal && <div {...underlayProps} className="fixed inset-0 w-64" />}
+      {!isNonModal && <div {...underlayProps} className="fixed inset-0" />}
       <div
         {...popoverProps}
         ref={popoverRef}
-        className={`z-10 border border-gray-300 bg-white rounded-md mt-2 ${className}`}
+        className={`z-10 shadow-lg border border-gray-300 bg-white rounded-md mt-2 ${className}`}
       >
         {!isNonModal && <DismissButton onDismiss={state.close} />}
         {children}
