@@ -15,9 +15,7 @@ export function Popover(props) {
 
   return (
     <Overlay>
-      {!isNonModal && (
-        <div {...underlayProps} className="fixed inset-0 w-full" />
-      )}
+      {!isNonModal && <div {...underlayProps} className="fixed inset-0 w-64" />}
       <div
         {...popoverProps}
         ref={popoverRef}

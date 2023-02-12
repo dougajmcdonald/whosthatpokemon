@@ -41,7 +41,7 @@ export function AutoComplete(props) {
   let outerRef = React.useRef(null)
 
   return (
-    <div className="inline-flex flex-col relative w-full">
+    <div className="inline-flex flex-col w-full">
       <label {...labelProps} className="block font-bold text-left mb-2">
         {props.label}
       </label>
@@ -76,7 +76,7 @@ export function AutoComplete(props) {
           state={state}
           isNonModal
           placement="bottom start"
-          className="w-full"
+          className="w-64"
         >
           <ListBox {...listBoxProps} listBoxRef={listBoxRef} state={state} />
         </Popover>

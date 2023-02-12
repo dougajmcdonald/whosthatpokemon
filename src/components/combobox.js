@@ -36,7 +36,7 @@ export function ComboBox(props) {
   let { buttonProps } = useButton(triggerProps, buttonRef)
 
   return (
-    <div className="inline-flex flex-col relative w-52">
+    <div className="inline-flex flex-col relative w-64">
       <label
         {...labelProps}
         className="block text-sm font-medium text-gray-700 text-left"
