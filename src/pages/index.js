@@ -48,8 +48,8 @@ export default function Home({ types, raidPokemon }) {
 
   return (
     <Layout title="Who's that Pokemon">
-      <h1 className="text-4xl mb-8 text-center">Who&apos;s that Pokemon</h1>
-      <section className="rounded-md mb-4 relative">
+      <h1 className="text-4xl mb-8 text-center">Raid helper</h1>
+      <section className="rounded-md mb-4">
         <AutoComplete
           label="Which Pokemon are you fighting?"
           defaultItems={raidPokemon}
