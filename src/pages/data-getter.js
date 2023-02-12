@@ -2,7 +2,7 @@ import React from "react"
 import Pokedex from "pokedex-promise-v2"
 import { filterNameToValidPokemon } from "../data/filters"
 import { svPokedexFinalEvolutions } from "../data/sv_pokemon"
-import { raidPokemon } from "../data/raid_pokemon"
+import { raidPokemon6 } from "../data/raid_pokemon_6"
 
 import Layout from "../components/layout"
 
@@ -189,38 +189,13 @@ const appendMoveData = async (pokemon, movesProperty) => {
   return pokemonWithMoves
 }
 
-const getRaidPokemonFromApi = async () => {
+const getraidPokemon6FromApi = async () => {
   const P = new Pokedex()
-  // console.log(
-  //   "6* raid pokemon",
-  //   raidPokemon.map((p) => p.name)
-  // );
 
-  // slower, but who cares it's a one off (ish)
-
-  // const pokemon = raidPokemon.map(p => {
-  //   pokemon: await P.getPokemonByName(p.name),
-  //   move
-  // })
-
-  const pokemon = await P.getPokemonByName(raidPokemon.map(p => p.name))
+  const pokemon = await P.getPokemonByName(raidPokemon6.map(p => p.name))
   //console.log("raid pokemon results", pokemon[0]);
   const pm = pokemon.map(mapPokeApiToSomethingFuckingSane)
   const ret = await appendMoveData(pm, "raidMoves")
-  // const ret = await Promise.all(
-  //   pm.map(async (x) => ({
-  //     ...x,
-  //     moveInfo: await (
-  //       await P.getMoveByName(x.raidMoves)
-  //     ).map((m) => ({
-  //       name: m.name,
-  //       power: m.power,
-  //       type: m.type.name,
-  //       class: m.damage_class.name,
-  //     })),
-  //   }))
-  // );
-  console.log("this thing", ret[0])
   return ret
 }
 
@@ -229,7 +204,7 @@ const mapPokeApiToSomethingFuckingSane = pokemon => ({
   name: pokemon.name,
   stats: mapPokemonStats(pokemon.stats),
   moves: scarletVioletMoves(pokemon.moves),
-  raidMoves: raidPokemon.find(p => p.name === pokemon.name)?.moves,
+  raidMoves: raidPokemon6.find(p => p.name === pokemon.name)?.moves,
   types: pokemon.types.map(t => t.type.name),
   //abilities: pokemon.abilities,
 })
@@ -244,8 +219,8 @@ export const getStaticProps = async () => {
   await saveJsonToFile(allPokemonJson, "all_pokemon.json")
 
   // get 6* raid pokemon data
-  const sixStarRaidPokemonJson = await getRaidPokemonFromApi()
-  await saveJsonToFile(sixStarRaidPokemonJson, "six_star_raid_pokemon.json")
+  const sixStarraidPokemon6Json = await getraidPokemon6FromApi()
+  await saveJsonToFile(sixStarraidPokemon6Json, "six_star_raid_pokemon.json")
 
   return {
     props: {},

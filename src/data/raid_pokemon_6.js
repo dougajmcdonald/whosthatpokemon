@@ -1,4 +1,4 @@
-export const raidPokemon = [
+export const raidPokemon6 = [
   {
     name: "gengar",
     moves: ["shadow-ball", "sludge-bomb", "dazzling-gleam", "will-o-wisp"],

@@ -48,8 +48,8 @@ export default function Home({ types, raidPokemon }) {
 
   return (
     <Layout title="Who's that Pokemon">
-      <h1 className="text-4xl mb-8 text-center">Raid helper</h1>
-      <section className="m-4 text-sm text-slate-400">
+      <h1 className="text-3xl mb-4">Raid helper</h1>
+      <section className="my-4 text-sm text-slate-400">
         <p>
           Who&apos;s that Pokemon helps your find the right pokemon for raids so
           you can spend your time battling, not reloading.

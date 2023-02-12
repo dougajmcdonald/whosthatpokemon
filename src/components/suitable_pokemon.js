@@ -55,6 +55,7 @@ const getSuitablePokemon = (moves, types, teraType) => {
         m =>
           superEffectiveTypes.map(t => t.name).includes(m.type) &&
           m.class !== "status" &&
+          m.power > 40 &&
           p.types.includes(m.type)
       ),
     }))
@@ -84,6 +85,16 @@ const sortNameDesc = (a, b) => {
   return 0
 }
 
+const sortPowerDesc = (a, b) => {
+  if (a.power > b.power) {
+    return -1
+  }
+  if (a.power < b.power) {
+    return 1
+  }
+  return 0
+}
+
 const SuitablePokemon = ({ pokemon, types, teraType }) => (
   <HeadedCard headerText="Who should you pick?">
     <section className="p-4">
@@ -95,6 +106,10 @@ const SuitablePokemon = ({ pokemon, types, teraType }) => (
         <p className="pb-2">
           The moves listed will deal Super-effective damage to the raid Pokemon
           so make sure you have some of these in your build.
+        </p>
+        <p className="pb-2">
+          In the future we hope to be able to recommend builds based on access
+          to suitable defensive moves and buffs.
         </p>
         <p className="pb-2">
           6* raid Pokemon are level 90, make sure your Pokemon is over level 90,
@@ -132,15 +147,17 @@ const SuitablePokemon = ({ pokemon, types, teraType }) => (
 
               <section className="ml-2">
                 <ul>
-                  {p.seStabMoves.map(move => (
+                  {p.seStabMoves.sort(sortPowerDesc).map(move => (
                     <li key={move.name} className="flex flex-row mb-1">
-                      <Image
-                        src={`/img/${move.type}_type.png`}
-                        alt={move.type}
-                        width="24"
-                        height="24"
-                        className="mr-2"
-                      />
+                      <div>
+                        <Image
+                          src={`/img/${move.type}_type.png`}
+                          alt={move.type}
+                          width={24}
+                          height={24}
+                          className="mr-2"
+                        />
+                      </div>
                       <p className="capitalize text-sm">
                         {move.name.replace("-", " ")}
                       </p>
