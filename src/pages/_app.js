@@ -1,6 +1,6 @@
 import "@/styles/globals.css"
 import { GoogleAnalytics } from "nextjs-google-analytics"
-//import { SSRProvider } from "@next";
+//import { SSRProvider } from "react-aria"
 
 // export function reportWebVitals({ id, name, label, value }) {
 //   event(name, {
@@ -13,15 +13,15 @@ import { GoogleAnalytics } from "nextjs-google-analytics"
 
 export default function App({ Component, pageProps }) {
   return (
+    //<SSRProvider>
     <>
       <GoogleAnalytics trackPageViews />
       <Component {...pageProps} />
     </>
+    //</SSRProvider>
   )
   // Can't use SSR provider at the moment due to react.spectrum issue here:
   // https://github.com/adobe/react-spectrum/issues/3787
   // It means you get a bunch of console warnings about ID consistency between server and client
   // because ids for the autocomplete SHOULD be static due to hard coded data, it's probably fine :shrug:
-  //<SSRProvider>
-  //</SSRProvider>
 }

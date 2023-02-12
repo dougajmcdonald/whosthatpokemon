@@ -125,12 +125,14 @@ const SuitablePokemon = ({ pokemon, types, teraType }) => (
             <p className="font-bold capitalize mb-4">{p.name}</p>
             <div className="flex flex-col">
               <section className="flex mb-4 border border-r-0 border-l-0 border-t-0 pb-2">
-                <Image
-                  src={pokemonImageUrl(p.id)}
-                  alt={p.name}
-                  width="64"
-                  height="64"
-                />
+                <div className="flex-grow">
+                  <Image
+                    src={pokemonImageUrl(p.id)}
+                    alt={p.name}
+                    width="64"
+                    height="64"
+                  />
+                </div>
                 <ul className="ml-1">
                   {p.types.map(t => (
                     <li key={p.id + t} className="py-1">
@@ -158,7 +160,7 @@ const SuitablePokemon = ({ pokemon, types, teraType }) => (
                           className="mr-2"
                         />
                       </div>
-                      <p className="capitalize text-sm">
+                      <p className="capitalize text-sm break-words">
                         {move.name.replace("-", " ")}
                       </p>
                     </li>

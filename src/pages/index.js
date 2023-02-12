@@ -8,7 +8,6 @@ const inter = Inter({ subsets: ["latin"] })
 import Layout from "../components/layout"
 //import SearchPokemon from "../components/search_pokemon"
 import { ComboBox } from "../components/combobox"
-import { AutoComplete } from "../components/autocomplete"
 import { Item, Section } from "../components/combobox"
 import TeraTypeSelector from "../components/teratypeselector"
 import PokemonAnalysis from "../components/pokemon_analysis"
@@ -21,9 +20,7 @@ export default function Home({ types, raidPokemon }) {
   const [teraType, setTeraType] = React.useState()
 
   const handleSelectionChange = id => {
-    console.log("doing it", id)
     const p = raidPokemon.find(x => x.id === id)
-    console.log("found", p)
     if (p) {
       const pokemonWithImage = {
         ...p,
