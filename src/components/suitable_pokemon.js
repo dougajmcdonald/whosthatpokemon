@@ -116,11 +116,11 @@ const SuitablePokemon = ({ pokemon, types, teraType }) => (
           ideally level 100.
         </p>
       </section>
-      <ul className="grid grid-cols-2">
+      <ul className="grid grid-cols-2 gap-1">
         {getSuitablePokemon(pokemon.moveInfo, types, teraType).map(p => (
           <article
             key={p.id + p.name}
-            className="flex flex-col border border-gray-500 rounded-md p-2 mr-1 mb-1 w-auto"
+            className="flex flex-col border border-gray-500 rounded-md p-2 mb-1 w-auto"
           >
             <p className="font-bold capitalize mb-4">{p.name}</p>
             <div className="flex flex-col">

@@ -41,14 +41,16 @@ const PokemonAnalysis = ({ pokemon, teraType }) => (
         <p className="font-bold mb-2">Moveset</p>
         <ul>
           {pokemon.moveInfo.map(move => (
-            <li key={move.name} className="flex mb-2">
-              <Image
-                src={`/img/${move.type}_type.png`}
-                alt={move.type}
-                width="24"
-                height="24"
-                className="mr-2"
-              />
+            <li key={move.name} className="flex mb-2 text-sm">
+              <div>
+                <Image
+                  src={`/img/${move.type}_type.png`}
+                  alt={move.type}
+                  width="24"
+                  height="24"
+                  className="mr-2"
+                />
+              </div>
               <p className="capitalize">{move.name.replace("-", " ")}</p>
             </li>
           ))}
