@@ -120,11 +120,11 @@ const SuitablePokemon = ({ pokemon, types, teraType }) => (
         {getSuitablePokemon(pokemon.moveInfo, types, teraType).map(p => (
           <article
             key={p.id + p.name}
-            className="flex flex-col border border-gray-500 rounded-md p-2 mr-2 mb-2 w-auto"
+            className="flex flex-col border border-gray-500 rounded-md p-2 mr-1 mb-1 w-auto"
           >
             <p className="font-bold capitalize mb-4">{p.name}</p>
             <div className="flex flex-col">
-              <section className="flex mb-4">
+              <section className="flex mb-4 border border-r-0 border-l-0 border-t-0 pb-2">
                 <Image
                   src={pokemonImageUrl(p.id)}
                   alt={p.name}
@@ -145,7 +145,7 @@ const SuitablePokemon = ({ pokemon, types, teraType }) => (
                 </ul>
               </section>
 
-              <section className="ml-2">
+              <section>
                 <ul>
                   {p.seStabMoves.sort(sortPowerDesc).map(move => (
                     <li key={move.name} className="flex flex-row mb-1">
