@@ -1,4 +1,5 @@
 import React from "react"
+import Select from "react-select"
 import { Inter } from "@next/font/google"
 import types from "../../types.json"
 import raidPokemon from "../../six_star_raid_pokemon.json"
@@ -6,9 +7,6 @@ import raidPokemon from "../../six_star_raid_pokemon.json"
 const inter = Inter({ subsets: ["latin"] })
 
 import Layout from "../components/layout"
-//import SearchPokemon from "../components/search_pokemon"
-import { ComboBox } from "../components/combobox"
-import { Item, Section } from "../components/combobox"
 import TeraTypeSelector from "../components/teratypeselector"
 import PokemonAnalysis from "../components/pokemon_analysis"
 import AttackAnalysis from "../components/attack_analysis"
@@ -19,8 +17,15 @@ export default function Home({ types, raidPokemon }) {
   const [targetPokemon, setTargetPokemon] = React.useState()
   const [teraType, setTeraType] = React.useState()
 
-  const handleSelectionChange = id => {
-    const p = raidPokemon.find(x => x.id === id)
+  const handleSelectionChange = selectedItem => {
+    console.log(selectedItem)
+    if (!selectedItem) {
+      setTargetPokemon(null)
+      setTeraType(null)
+      return
+    }
+    //type ActionTypes = | 'clear' | 'create-option' | 'deselect-option' | 'pop-value' | 'remove-value' | 'select-option' | 'set-value'
+    const p = raidPokemon.find(x => x.id === selectedItem.id)
     if (p) {
       const pokemonWithImage = {
         ...p,
@@ -57,6 +62,16 @@ export default function Home({ types, raidPokemon }) {
     return 0
   }
 
+  const classNames = {
+    control: state => "bg-slate-800 p-3",
+    option: state => "bg-slate-800 text-slate-50 p-3 hover:bg-slate-700",
+    container: state =>
+      state.isFocussed
+        ? "rounded-md border-2 border-pink-300"
+        : "rounded-md border-2 border-yellow-300",
+    singleValue: state => "text-slate-50",
+  }
+
   return (
     <Layout title="Who's that Pokemon">
       <h1 className="text-3xl mb-4">Raid helper</h1>
@@ -67,13 +82,23 @@ export default function Home({ types, raidPokemon }) {
         </p>
       </section>
       <section className="rounded-md mb-4 capitalize">
-        <ComboBox
+        <Select
+          unstyled
+          isClearable
+          classNames={classNames}
+          onChange={handleSelectionChange}
+          options={raidPokemon
+            .sort(sortNameDesc)
+            .map(p => ({ id: p.id, label: p.name }))}
+        />
+
+        {/* <ComboBox
           label="What Pokemon is this raid for?"
           defaultItems={raidPokemon.sort(sortNameDesc)}
           onSelectionChange={handleSelectionChange}
         >
           {item => <Item>{item.name}</Item>}
-        </ComboBox>
+        </ComboBox> */}
       </section>
       {targetPokemon && (
         <TeraTypeSelector types={types} handleClick={handleClick} />
