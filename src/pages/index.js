@@ -1,8 +1,10 @@
 import React from "react"
 import Select from "react-select"
 import { Inter } from "@next/font/google"
+
 import types from "../../types.json"
-import raidPokemon from "../../six_star_raid_pokemon.json"
+import raidPokemon5 from "../../five_star_raid_pokemon.json"
+import raidPokemon6 from "../../six_star_raid_pokemon.json"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -13,7 +15,7 @@ import AttackAnalysis from "../components/attack_analysis"
 import SuitablePokemon from "../components/suitable_pokemon"
 import Link from "next/link"
 
-export default function Home({ types, raidPokemon }) {
+export default function Home({ types, allRaidPokemon }) {
   const [targetPokemon, setTargetPokemon] = React.useState()
   const [teraType, setTeraType] = React.useState()
 
@@ -25,7 +27,7 @@ export default function Home({ types, raidPokemon }) {
       return
     }
     //type ActionTypes = | 'clear' | 'create-option' | 'deselect-option' | 'pop-value' | 'remove-value' | 'select-option' | 'set-value'
-    const p = raidPokemon.find(x => x.id === selectedItem.id)
+    const p = allRaidPokemon.find(x => x.id === selectedItem.id)
     if (p) {
       const pokemonWithImage = {
         ...p,
@@ -63,13 +65,32 @@ export default function Home({ types, raidPokemon }) {
   }
 
   const classNames = {
-    control: state => "bg-slate-800 p-3",
-    option: state => "bg-slate-800 text-slate-50 p-3 hover:bg-slate-700",
+    control: state => "bg-slate-800 p-3 rounded-md",
+    option: state => "bg-slate-800 text-slate-50 p-3 pl-5 hover:bg-slate-700",
     container: state =>
       state.isFocussed
         ? "rounded-md border-2 border-pink-300"
         : "rounded-md border-2 border-yellow-300",
-    singleValue: state => "text-slate-50",
+    singleValue: state => "text-slate-50 rounded-md",
+    groupHeading: state => "p-2 bg-slate-700 font-bold",
+  }
+
+  const prepGroupedRaidMons = () => {
+    const options = [
+      {
+        label: "Five Star Raids",
+        options: raidPokemon5
+          .sort(sortNameDesc)
+          .map(p => ({ id: p.id, label: p.name })),
+      },
+      {
+        label: "Six Star Raids",
+        options: raidPokemon6
+          .sort(sortNameDesc)
+          .map(p => ({ id: p.id, label: p.name })),
+      },
+    ]
+    return options
   }
 
   return (
@@ -87,9 +108,7 @@ export default function Home({ types, raidPokemon }) {
           isClearable
           classNames={classNames}
           onChange={handleSelectionChange}
-          options={raidPokemon
-            .sort(sortNameDesc)
-            .map(p => ({ id: p.id, label: p.name }))}
+          options={prepGroupedRaidMons()}
         />
 
         {/* <ComboBox
@@ -130,6 +149,11 @@ export default function Home({ types, raidPokemon }) {
 
 export const getStaticProps = async () => {
   return {
-    props: { types: types, raidPokemon: raidPokemon },
+    props: {
+      types,
+      raidPokemon5,
+      raidPokemon6,
+      allRaidPokemon: raidPokemon5.concat(raidPokemon6),
+    },
   }
 }

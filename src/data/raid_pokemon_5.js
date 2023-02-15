@@ -1,4 +1,4 @@
-export const raidpokemon6 = [
+export const raidPokemon5 = [
   { name: "raichu", moves: ["discharge", "iron-tail", "charm", "nuzzle"] },
   {
     name: "arcanine",
@@ -73,7 +73,7 @@ export const raidpokemon6 = [
   },
   {
     name: "sableye",
-    moves: ["shadow claw", "foul-play", "will-o-wisp", "night-shade"],
+    moves: ["shadow-claw", "foul-play", "will-o-wisp", "night-shade"],
   },
   {
     name: "camerupt",
@@ -85,7 +85,7 @@ export const raidpokemon6 = [
   },
   {
     name: "glalie",
-    moves: ["freeze-dry", "crunch", "headbutt", "frost breath"],
+    moves: ["freeze-dry", "crunch", "headbutt", "frost-breath"],
   },
   {
     name: "salamence",
@@ -228,7 +228,7 @@ export const raidpokemon6 = [
     moves: ["reversal", "rock-smash", "facade", "gunk-shot"],
   },
   {
-    name: "mimikyu",
+    name: "mimikyu-disguised",
     moves: ["play-rough", "shadow-claw", "will-o-wisp", "shadow-sneak"],
   },
   {
@@ -252,7 +252,7 @@ export const raidpokemon6 = [
     moves: ["apple-acid", "dragon-pulse", "giga-drain", "body-press"],
   },
   {
-    name: "toxtricity",
+    name: "toxtricity-amped",
     moves: ["overdrive", "poison-jab", "nuzzle", "boomburst"],
   },
   {
@@ -276,7 +276,7 @@ export const raidpokemon6 = [
     moves: ["zing-zap", "thunder", "surf", "poison-jab"],
   },
   {
-    name: "indeedee",
+    name: "indeedee-female",
     moves: ["psychic", "hyper-voice", "shadow-ball", "trick-room"],
   },
   {
@@ -363,4 +363,4 @@ export const raidpokemon6 = [
     name: "baxcalibur",
     moves: ["dragon-claw", "icicle-crash", "ice-shard", "body-press"],
   },
-];
+]
