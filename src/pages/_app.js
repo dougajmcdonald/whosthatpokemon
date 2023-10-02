@@ -1,5 +1,5 @@
-import "@/styles/globals.css"
-import { GoogleAnalytics } from "nextjs-google-analytics"
+import '@/styles/globals.css'
+import { GoogleAnalytics } from 'nextjs-google-analytics'
 //import { SSRProvider } from "react-aria"
 
 // export function reportWebVitals({ id, name, label, value }) {

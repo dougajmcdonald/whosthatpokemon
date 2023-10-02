@@ -1,13 +1,13 @@
-import React from "react";
-import Pokedex from "pokedex-promise-v2";
-import { filterNameToValidPokemon } from "../data/filters";
-import { svPokedexFinalEvolutions } from "../data/sv_pokemon";
-import { raidPokemon6 } from "../data/raid_pokemon_6";
-import { raidPokemon5 } from "../data/raid_pokemon_5";
+import React from 'react'
+import Pokedex from 'pokedex-promise-v2'
+import { filterNameToValidPokemon } from '../data/filters'
+import { svPokedexFinalEvolutions } from '../data/sv_pokemon'
+import { raidPokemon6 } from '../data/raid_pokemon_6'
+import { raidPokemon5 } from '../data/raid_pokemon_5'
 
-import Layout from "../components/layout";
+import Layout from '../components/layout'
 
-const fsPromises = require("fs").promises;
+const fsPromises = require('fs').promises
 
 export default function DataGetter({ types }) {
   const superEffectiveDamageTypes = (type, teraType) => {
@@ -15,7 +15,7 @@ export default function DataGetter({ types }) {
     // tera type of the raid
     const filteredResult = teraType.damage_relations.double_damage_from
       .map((y) => y.name)
-      .includes(type.name);
+      .includes(type.name)
     // console.log(
     //   "Tera type: ",
     //   teraType.name,
@@ -23,8 +23,8 @@ export default function DataGetter({ types }) {
     //   type.name,
     //   filteredResult
     // );
-    return filteredResult;
-  };
+    return filteredResult
+  }
 
   const getAcceptableTypes = async (type) => {
     const acceptableCandidates = types
@@ -33,17 +33,15 @@ export default function DataGetter({ types }) {
       .map((x) =>
         x.pokemon.map((z) => z.pokemon.name).filter(filterNameToValidPokemon)
       )
-      .flat();
+      .flat()
 
     //remove dupes
-    const uniqueAcceptableCandidates = [...new Set(acceptableCandidates)];
+    const uniqueAcceptableCandidates = [...new Set(acceptableCandidates)]
     //console.log("names", uniqueAcceptableCandidates);
 
     // long wait
     if (uniqueAcceptableCandidates.length > 0) {
-      const candidateData = await P.getPokemonByName(
-        uniqueAcceptableCandidates
-      );
+      const candidateData = await P.getPokemonByName(uniqueAcceptableCandidates)
       //console.log("data", candidateData);
 
       const validMons = candidateData.filter((x) =>
@@ -52,13 +50,13 @@ export default function DataGetter({ types }) {
           .every(
             (x) => !targetPokemon.types.map((t) => t.type.name).includes(x)
           )
-      );
+      )
       //console.log(validMons);
-      setRecommendedPokemon(validMons);
+      setRecommendedPokemon(validMons)
     }
-  };
+  }
 
-  const getMoveData = async (name) => await P.getMoveByName(name);
+  const getMoveData = async (name) => await P.getMoveByName(name)
 
   return (
     <Layout title="Data getter">
@@ -68,32 +66,32 @@ export default function DataGetter({ types }) {
         saves it to file
       </p>
     </Layout>
-  );
+  )
 }
 
 const saveJsonToFile = async (data, filename) => {
-  console.log("save", filename);
+  console.log('save', filename)
   // save to file
   await fsPromises
     .writeFile(filename, JSON.stringify(data))
     .then(() => {
-      console.log(`${filename} saved`);
+      console.log(`${filename} saved`)
     })
     .catch((er) => {
-      console.log(er);
-    });
-};
+      console.log(er)
+    })
+}
 
 const mapPokemonStats = (stats) => {
   const mapped = stats.map((s) => ({
     key: s.stat.name,
     base: s.base_stat,
-  }));
+  }))
 
-  const statMap = mapped.map((s) => ({ [s.key]: s.base }));
+  const statMap = mapped.map((s) => ({ [s.key]: s.base }))
 
-  return Object.assign({}, ...statMap);
-};
+  return Object.assign({}, ...statMap)
+}
 
 const scarletVioletMoves = (moves) => {
   // TODO: This filter doesn't seem to work
@@ -102,63 +100,63 @@ const scarletVioletMoves = (moves) => {
     .filter(
       (m) =>
         m.version_group_details.filter(
-          (vgd) => vgd.version_group.name === "scarlet-violet"
+          (vgd) => vgd.version_group.name === 'scarlet-violet'
         ).length > 0
     )
-    .map((m) => m.move.name);
+    .map((m) => m.move.name)
 
   //console.log("valid moves", moveValidForScarletViolet.length);
 
-  return moveValidForScarletViolet;
-};
+  return moveValidForScarletViolet
+}
 
 const getTypesFromApi = async () => {
-  const P = new Pokedex();
+  const P = new Pokedex()
 
-  const { results } = await P.getTypesList();
+  const { results } = await P.getTypesList()
   const typeData = await Promise.all(
     results
-      .filter((type) => type.name !== "unknown" && type.name !== "shadow")
+      .filter((type) => type.name !== 'unknown' && type.name !== 'shadow')
       .map(async (r) => {
-        const typeInfo = await P.getTypeByName(r.name);
+        const typeInfo = await P.getTypeByName(r.name)
         return {
           name: r.name,
           damage_relations: typeInfo.damage_relations,
           //pokemon: typeInfo.pokemon,
-        };
+        }
       })
-  );
+  )
 
-  return typeData;
-};
+  return typeData
+}
 
 const getAllPokemonFromApi = async () => {
   const options = {
     timeout: 30 * 1000, // 50s
-  };
-  const P = new Pokedex(options);
+  }
+  const P = new Pokedex(options)
 
   const pokemon = await P.getPokemonByName(
     svPokedexFinalEvolutions.map((p) => p.name)
-  );
+  )
 
-  const pm = pokemon.map(mapPokeApiToSomethingFuckingSane);
+  const pm = pokemon.map(mapPokeApiToSomethingFuckingSane)
 
-  return await appendMoveData(pm, "moves");
-};
+  return await appendMoveData(pm, 'moves')
+}
 
 const appendMoveData = async (pokemon, movesProperty) => {
   const options = {
     timeout: 60 * 1000, // 50s
-  };
-  const P = new Pokedex(options);
+  }
+  const P = new Pokedex(options)
 
-  const pokemonWithMoves = [];
+  const pokemonWithMoves = []
 
   for (let index = 0; index < pokemon.length; index++) {
-    const element = pokemon[index];
+    const element = pokemon[index]
     //console.log(index, ": getting data for ", element.name)
-    const data = await P.getMoveByName(element[movesProperty]);
+    const data = await P.getMoveByName(element[movesProperty])
     pokemonWithMoves.push({
       ...element,
       moveInfo: data.map((m) => ({
@@ -167,7 +165,7 @@ const appendMoveData = async (pokemon, movesProperty) => {
         type: m.type.name,
         class: m.damage_class.name,
       })),
-    });
+    })
     //console.log(element.name, " done.")
   }
 
@@ -189,33 +187,33 @@ const appendMoveData = async (pokemon, movesProperty) => {
 
   //const awaited = Promise.all(ret)
 
-  console.log("w00t", pokemonWithMoves[0]);
+  console.log('w00t', pokemonWithMoves[0])
 
-  return pokemonWithMoves;
-};
+  return pokemonWithMoves
+}
 
 const getSixStarRaidPokemonFromApi = async () => {
-  const P = new Pokedex();
+  const P = new Pokedex()
 
-  const pokemon = await P.getPokemonByName(raidPokemon6.map((p) => p.name));
+  const pokemon = await P.getPokemonByName(raidPokemon6.map((p) => p.name))
   //console.log("raid pokemon results", pokemon[0]);
-  const pm = pokemon.map(mapPokeApiToSomethingFuckingSane);
-  const pmMoves = pm.map(mapRaidMoves);
-  const ret = await appendMoveData(pmMoves, "raidMoves");
-  return ret;
-};
+  const pm = pokemon.map(mapPokeApiToSomethingFuckingSane)
+  const pmMoves = pm.map(mapRaidMoves)
+  const ret = await appendMoveData(pmMoves, 'raidMoves')
+  return ret
+}
 
 const getFiveStarRaidPokemonFromApi = async () => {
   //console.log(raidPokemon5)
-  const P = new Pokedex();
+  const P = new Pokedex()
 
-  const pokemon = await P.getPokemonByName(raidPokemon5.map((p) => p.name));
+  const pokemon = await P.getPokemonByName(raidPokemon5.map((p) => p.name))
   //console.log("raid pokemon results", pokemon[0]);
-  const pm = pokemon.map(mapPokeApiToSomethingFuckingSane);
-  const pmMoves = pm.map(mapRaidMoves);
-  const ret = await appendMoveData(pmMoves, "raidMoves");
-  return ret;
-};
+  const pm = pokemon.map(mapPokeApiToSomethingFuckingSane)
+  const pmMoves = pm.map(mapRaidMoves)
+  const ret = await appendMoveData(pmMoves, 'raidMoves')
+  return ret
+}
 
 const mapPokeApiToSomethingFuckingSane = (pokemon) => ({
   id: pokemon.id,
@@ -227,33 +225,33 @@ const mapPokeApiToSomethingFuckingSane = (pokemon) => ({
   //   .find(p => p.name === pokemon.name)?.moves,
   types: pokemon.types.map((t) => t.type.name),
   //abilities: pokemon.abilities,
-});
+})
 
-const allRaidPokemon = raidPokemon6.concat(raidPokemon5);
+const allRaidPokemon = raidPokemon6.concat(raidPokemon5)
 
 const mapRaidMoves = (pokemon) => ({
   ...pokemon,
   raidMoves: allRaidPokemon.find((p) => p.name === pokemon.name)?.moves,
-});
+})
 
 export const getStaticProps = async () => {
   //get type data
-  const typeJson = await getTypesFromApi();
-  await saveJsonToFile(typeJson, "types.json");
+  const typeJson = await getTypesFromApi()
+  await saveJsonToFile(typeJson, 'types.json')
 
   // get all pokemon data
-  const allPokemonJson = await getAllPokemonFromApi();
-  await saveJsonToFile(allPokemonJson, "all_pokemon.json");
+  const allPokemonJson = await getAllPokemonFromApi()
+  await saveJsonToFile(allPokemonJson, 'all_pokemon.json')
 
   // get 5* raid pokemon data
-  const fiveStarRaidPokemonJson = await getFiveStarRaidPokemonFromApi();
-  await saveJsonToFile(fiveStarRaidPokemonJson, "five_star_raid_pokemon.json");
+  const fiveStarRaidPokemonJson = await getFiveStarRaidPokemonFromApi()
+  await saveJsonToFile(fiveStarRaidPokemonJson, 'five_star_raid_pokemon.json')
 
   // get 6* raid pokemon data
-  const sixStarRaidPokemonJson = await getSixStarRaidPokemonFromApi();
-  await saveJsonToFile(sixStarRaidPokemonJson, "six_star_raid_pokemon.json");
+  const sixStarRaidPokemonJson = await getSixStarRaidPokemonFromApi()
+  await saveJsonToFile(sixStarRaidPokemonJson, 'six_star_raid_pokemon.json')
 
   return {
     props: {},
-  };
-};
+  }
+}
