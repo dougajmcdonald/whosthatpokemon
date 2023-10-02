@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react'
 
 const StatListItem = ({ label, value }) => (
   <li className="bg-slate-700 flex flex-row flex-shrink rounded-md text-slate-50 mx-4 mb-1 text-sm w-64">

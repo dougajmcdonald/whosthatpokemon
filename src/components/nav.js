@@ -1,6 +1,6 @@
-import React from "react"
-import Link from "next/link"
-import Image from "next/image"
+import React from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
 
 const Nav = () => (
   <section className="flex flex-row h-16 bg-slate-800 w-full text-slate-50">

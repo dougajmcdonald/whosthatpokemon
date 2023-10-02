@@ -1,19 +1,19 @@
-import React from "react"
-import Image from "next/image"
+import React from 'react'
+import Image from 'next/image'
 
-import svPokemon from "../../all_pokemon.json"
+import svPokemon from '../../all_pokemon.json'
 
-import HeadedCard from "./headed_card"
+import HeadedCard from './headed_card'
 
-const getSuperEffective = relations => relations.double_damage_from
+const getSuperEffective = (relations) => relations.double_damage_from
 
-const pokemonImageUrl = id => {
+const pokemonImageUrl = (id) => {
   let paddedId
 
   if (id.toString().length > 3) {
-    paddedId = ("0" + id).slice(-4)
+    paddedId = ('0' + id).slice(-4)
   } else {
-    paddedId = ("00" + id).slice(-3)
+    paddedId = ('00' + id).slice(-3)
   }
 
   return `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${paddedId}.png`
@@ -21,47 +21,47 @@ const pokemonImageUrl = id => {
 
 const getSuitablePokemon = (moves, types, teraType) => {
   // types that the target pokemn hits for super effective dmg
-  const data = moves.map(m =>
+  const data = moves.map((m) =>
     types
-      .find(t => t.name === m.type)
-      ?.damage_relations.double_damage_to.map(ddt => ddt.name)
+      .find((t) => t.name === m.type)
+      ?.damage_relations.double_damage_to.map((ddt) => ddt.name)
   )
 
   const uniqueTypes = [...new Set(data.flat())]
 
   // pokemon who can't be hit for super effective dmg
   const suitable = svPokemon.filter(
-    p => !p.types.some(t => uniqueTypes.includes(t))
+    (p) => !p.types.some((t) => uniqueTypes.includes(t))
   )
 
   // pokemon who have access to moves with super effective dmg against the target
   const superEffectiveTypes = getSuperEffective(teraType.damage_relations)
   //console.log(superEffectiveTypes)
   const superEffective = suitable
-    .filter(p => {
+    .filter((p) => {
       //console.log(p.moveInfo.map(t => t.type))
       return p.moveInfo
-        .filter(m => m.class !== "status")
-        .some(m => superEffectiveTypes.map(t => t.name).includes(m.type))
+        .filter((m) => m.class !== 'status')
+        .some((m) => superEffectiveTypes.map((t) => t.name).includes(m.type))
     })
-    .map(p => ({
+    .map((p) => ({
       ...p,
       seMoves: p.moveInfo.filter(
-        m =>
-          superEffectiveTypes.map(t => t.name).includes(m.type) &&
-          m.class !== "status"
+        (m) =>
+          superEffectiveTypes.map((t) => t.name).includes(m.type) &&
+          m.class !== 'status'
       ),
       seStabMoves: p.moveInfo.filter(
-        m =>
-          superEffectiveTypes.map(t => t.name).includes(m.type) &&
-          m.class !== "status" &&
+        (m) =>
+          superEffectiveTypes.map((t) => t.name).includes(m.type) &&
+          m.class !== 'status' &&
           m.power > 40 &&
           p.types.includes(m.type)
       ),
     }))
 
   const superEffectiveStab = superEffective.filter(
-    p => p.seStabMoves.length > 0
+    (p) => p.seStabMoves.length > 0
   )
 
   // list the dmging moves you want
@@ -117,7 +117,7 @@ const SuitablePokemon = ({ pokemon, types, teraType }) => (
         </p>
       </section>
       <ul className="grid grid-cols-2 gap-1">
-        {getSuitablePokemon(pokemon.moveInfo, types, teraType).map(p => (
+        {getSuitablePokemon(pokemon.moveInfo, types, teraType).map((p) => (
           <article
             key={p.id + p.name}
             className="flex flex-col border border-gray-500 rounded-md p-2 mb-1 w-auto"
@@ -134,7 +134,7 @@ const SuitablePokemon = ({ pokemon, types, teraType }) => (
                   />
                 </div>
                 <ul className="ml-1">
-                  {p.types.map(t => (
+                  {p.types.map((t) => (
                     <li key={p.id + t} className="py-1">
                       <Image
                         src={`/img/${t}_banner.png`}
@@ -149,7 +149,7 @@ const SuitablePokemon = ({ pokemon, types, teraType }) => (
 
               <section>
                 <ul>
-                  {p.seStabMoves.sort(sortPowerDesc).map(move => (
+                  {p.seStabMoves.sort(sortPowerDesc).map((move) => (
                     <li key={move.name} className="flex flex-row mb-1">
                       <div>
                         <Image
@@ -161,7 +161,7 @@ const SuitablePokemon = ({ pokemon, types, teraType }) => (
                         />
                       </div>
                       <p className="capitalize text-sm break-words">
-                        {move.name.replace("-", " ")}
+                        {move.name.replace('-', ' ')}
                       </p>
                     </li>
                   ))}

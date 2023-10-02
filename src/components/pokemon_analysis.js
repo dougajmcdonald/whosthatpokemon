@@ -1,7 +1,7 @@
-import React from "react"
-import Image from "next/image"
-import StatListItem from "../components/statlistitem"
-import HeadedCard from "./headed_card"
+import React from 'react'
+import Image from 'next/image'
+import StatListItem from '../components/statlistitem'
+import HeadedCard from './headed_card'
 
 const PokemonAnalysis = ({ pokemon, teraType }) => (
   <HeadedCard headerText={pokemon.name}>
@@ -24,10 +24,10 @@ const PokemonAnalysis = ({ pokemon, teraType }) => (
         </div>
         <ul>
           <p className="font-bold mb-2">Pokemon type</p>
-          {pokemon.types.map(t => (
+          {pokemon.types.map((t) => (
             <li key={t} className="mb-1">
               <Image
-                key={"type_banner_" + t}
+                key={'type_banner_' + t}
                 src={`/img/${t}_banner.png`}
                 alt={t}
                 width="100"
@@ -40,7 +40,7 @@ const PokemonAnalysis = ({ pokemon, teraType }) => (
       <section className="flex flex-col pl-4">
         <p className="font-bold mb-2">Moveset</p>
         <ul>
-          {pokemon.moveInfo.map(move => (
+          {pokemon.moveInfo.map((move) => (
             <li key={move.name} className="flex mb-2 text-sm">
               <div>
                 <Image
@@ -51,7 +51,7 @@ const PokemonAnalysis = ({ pokemon, teraType }) => (
                   className="mr-2"
                 />
               </div>
-              <p className="capitalize">{move.name.replace("-", " ")}</p>
+              <p className="capitalize">{move.name.replace('-', ' ')}</p>
             </li>
           ))}
         </ul>

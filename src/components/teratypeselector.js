@@ -1,6 +1,6 @@
-import React from "react"
-import Button from "../components/button"
-import Image from "next/image"
+import React from 'react'
+import Button from '../components/button'
+import Image from 'next/image'
 
 const TeraTypeSelector = ({ types, handleClick }) => (
   <section className="flex flex-col flex-grow">
@@ -8,7 +8,7 @@ const TeraTypeSelector = ({ types, handleClick }) => (
       What is the raid Tera type?
     </p>
     <ul className="grid w-full grid-cols-6">
-      {types.map(type => {
+      {types.map((type) => {
         return (
           <li key={type.name} className="flex items-center justify-center">
             <Button onPress={() => handleClick(type)}>
