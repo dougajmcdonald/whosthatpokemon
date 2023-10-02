@@ -363,4 +363,97 @@ export const raidPokemon5 = [
     name: "baxcalibur",
     moves: ["dragon-claw", "icicle-crash", "ice-shard", "body-press"],
   },
-]
+  // Kitakami
+  {
+    name: "ninetales",
+    moves: ["flamethrower", "extrasensory", "will-o-wisp", "hypnosis"],
+  },
+  {
+    name: "poliwrath",
+    moves: ["liquidation", "brick-break", "haze", "hydro-pump"],
+  },
+  {
+    name: "victreebel",
+    moves: ["sludge-bomb", "power-whip", "acid-spray", "trailblaze"],
+  },
+  {
+    name: "golem",
+    moves: ["earthquake", "stone-edge", "heavy-slam", "defense-curl"],
+  },
+  {
+    name: "snorlax",
+    moves: ["body-slam", "heavy-slam", "bite", "mud-slap"],
+  },
+  {
+    name: "politoed",
+    moves: ["surf", "hyper-voice", "weather-ball", "encore"],
+  },
+  {
+    name: "ludicolo",
+    moves: ["energy-ball", "surf", "fake-out", "trailblaze"],
+  },
+  {
+    name: "shiftry",
+    moves: ["fake-out", "sucker-punch", "leaf-blade", "extrasensory"],
+  },
+  {
+    name: "milotic",
+    moves: ["chilling-water", "surf", "dragon-pulse", "attract"],
+  },
+  {
+    name: "ambipom",
+    moves: ["double-hit", "screech", "fury-swipes", "knock-off"],
+  },
+  {
+    name: "yanmega",
+    moves: ["bug-buzz", "air-slash", "quick-attack", "hypnosis"],
+  },
+  {
+    name: "gliscor",
+    moves: ["poison-jab", "earthquake", "acrobatics", "x-scissor"],
+  },
+  {
+    name: "mamoswine",
+    moves: ["earthquake", "blizzard", "ice-shard", "ancient-power"],
+  },
+  {
+    name: "probopass",
+    moves: ["body-press", "power-gem", "flash-cannon", "harden"],
+  },
+  {
+    name: "dusknoir",
+    moves: ["fire-punch", "brick-break", "shadow-ball", "shadow-punch"],
+  },
+  {
+    name: "conkeldurr",
+    moves: ["hammer-arm", "stone-edge", "superpower", "scary-face"],
+  },
+  {
+    name: "chandelure",
+    moves: ["shadow-ball", "heat-wave", "confuse-ray", "flamethrower"],
+  },
+  {
+    name: "mienshao",
+    moves: ["aura-sphere", "poison-jab", "taunt", "acrobatics"],
+  },
+  {
+    name: "mandibuzz",
+    moves: ["rock-tomb", "dark-pulse", "toxic", "foul-play"],
+  },
+  {
+    name: "trevenant",
+    moves: ["wood-hammer", "shadow-claw", "will-o-wisp", "hex"],
+  },
+  {
+    name: "vikavolt",
+    moves: ["discharge", "bug-buzz", "solar-beam", "zap-cannon"],
+  },
+  {
+    name: "kommo-o",
+    moves: ["brick-break", "dragon-claw", "boomburst", "scary-face"],
+  },
+  {
+    name: "sinistcha",
+    moves: ["liquidation", "aqua-jet", "shadow-ball", "scary-face"],
+  },
+];

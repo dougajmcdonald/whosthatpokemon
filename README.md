@@ -1,38 +1,36 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Whosthatpokemon
+
+This is a website designed to help people find the best raid pokemon for Tera raids in Pokemon Scarlet/Violet.
+
+It knows about all the 5* and 6* raids in the game and looks at the types and moves of those pokemon to suggest a list of pokemon you could use to avoid taking supereffective damage and to deal supereffective damage in return.
 
 ## Getting Started
 
-First, run the development server:
+How to get a list of valid raid pokemon
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+- Use serebii.net to find the 5star and 6star pokemon:
+  - https://serebii.net/scarletviolet/teraraidbattles/5star.shtm
+  - https://serebii.net/scarletviolet/teraraidbattles/6star.shtml
+- Copy the name and the moves of the pokemon into the `raid_pokemon_5.js` and `raid_pokemon_6.js` files. These are effectively the source values which we need to lookup.
+- run the site locally with `npm run dev`
+- access the data getter page `http://localhost:3000/data-getter` this will go and get all the data for the moves and pokemon from the source values, and dump the outputs into `five_star_raid_pokemon.json` and `six_star_raid_pokemon.json` respectively - these need to be comitted to source control as they are the data source for the api calls once hosted (this was far quicker than trying to access and process the data from the third party API on the fly)
+- (Optional) - Configure the `data-getter.js` to get data for all pokemon (this can take a while). I think you'd need to do this when pokemon are updated.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Problem solving
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+### Getting the pokemon
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+If you get 404's trying to get the pokemon from any of the data-getter methods, it's likely that pokeapi.io expects a different name to the "common" name provided. Where there are different variants (e.g. Gender) you have to be really specific (which is REALLY annoying!)
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Here's how to solve it:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. Make a request to pokeapi with the name you think is right - https://pokeapi.co/api/v2/pokemon/giratina confirm you get a 404/not found.
+2. Go to something which can do a lookup to pokedex number, e.g https://www.pokemon.com/uk/pokedex and search for the pokedex entry
+3. Requery https://pokeapi.co/api/v2/pokemon/487 with the pokedex number. Look at the network response for the correct name.
 
-## Learn More
+(TODO: Perhaps we should query by pokedex number anyway?)
 
-To learn more about Next.js, take a look at the following resources:
+If you get other 404's here's what to check:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Case sensitivity (all the API names are lowercase)
+- Spaces (all the multi word API calls are hyphentated e.g. "hydro-pump")

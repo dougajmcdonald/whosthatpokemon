@@ -229,4 +229,107 @@ export const raidPokemon6 = [
     name: "baxcalibur",
     moves: ["icicle-spear", "dragon-rush", "snowscape", "body-press"],
   },
-]
+  // kitakami
+  {
+    name: "clefable",
+    moves: ["moonblast", "psychic", "meteor-mash", "encore"],
+  },
+  {
+    name: "ninetales",
+    moves: ["flamethrower", "extrasensory", "will-o-wisp", "burning-jealousy"],
+  },
+  {
+    name: "poliwrath",
+    moves: ["brick-break", "liquidation", "focus-blast", "haze"],
+  },
+  { name: "golem", moves: ["earthquake", "rock-slide", "flail", "smack-down"] },
+  {
+    name: "snorlax",
+    moves: ["facade", "crunch", "yawn", "heavy-slam"],
+  },
+  { name: "politoed", moves: ["chilling-water", "surf", "ice-beam", "encore"] },
+  {
+    name: "quagsire",
+    moves: ["earthquake", "liquidation", "yawn", "toxic"],
+  },
+  {
+    name: "ludicolo",
+    moves: ["energy-ball", "hydro-pump", "fake-out", "chilling-water"],
+  },
+  {
+    name: "shiftry",
+    moves: ["leaf-blade", "sucker-punch", "fake-out", "extrasensory"],
+  },
+  {
+    name: "crawdaunt",
+    moves: ["aqua-jet", "crabhammer", "crunch", "giga-impact"],
+  },
+  {
+    name: "milotic",
+    moves: ["dragon-pulse", "water-pulse", "safeguard", "aqua-tail"],
+  },
+  {
+    name: "ambipom",
+    moves: ["double-hit", "ice-punch", "fire-punch", "thunder-punch"],
+  },
+  {
+    name: "yanmega",
+    moves: ["bug-buzz", "air-slash", "quick-attack", "ancient-power"],
+  },
+  {
+    name: "gliscor",
+    moves: ["acrobatics", "knock-off", "quick-attack", "earthquake"],
+  },
+  {
+    name: "mamoswine",
+    moves: ["icicle-crash", "ice-shard", "bulldoze", "freeze-dry"],
+  },
+  {
+    name: "dusknoir",
+    moves: ["poltergeist", "dark-pulse", "will-o-wisp", "ice-punch"],
+  },
+  {
+    name: "conkeldurr",
+    moves: ["rock-slide", "close-combat", "mach-punch", "slam"],
+  },
+  {
+    name: "leavanny",
+    moves: ["leaf-blade", "x-scissor", "grassy-glide", "sticky-web"],
+  },
+  {
+    name: "chandelure",
+    moves: ["flamethrower", "shadow-ball", "will-o-wisp", "poltergeist"],
+  },
+  {
+    name: "mienshao",
+    moves: ["aerial-ace", "brick-break", "aura-sphere", "reversal"],
+  },
+  {
+    name: "mandibuzz",
+    moves: ["dual-wingbeat", "dark-pulse", "toxic", "bone-rush"],
+  },
+  {
+    name: "trevenant",
+    moves: ["wood-hammer", "shadow-claw", "forests-curse", "will-o-wisp"],
+  },
+  {
+    name: "kommo-o",
+    moves: ["focus-blast", "dragon-claw", "iron-head", "scary-face"],
+  },
+  {
+    name: "morpeko-full-belly",
+    moves: ["aura-wheel", "lash-out", "thunder-wave", "torment"],
+  },
+  {
+    name: "basculegion-male",
+    moves: ["wave-crash", "aqua-jet", "crunch", "scary-face"],
+  },
+  {
+    name: "basculegion-female",
+    moves: ["surf", "aqua-jet", "shadow-ball", "scary-face"],
+  },
+  {
+    name: "sinistcha",
+    moves: ["energy-ball", "shadow-ball", "stun-spore", "scald"],
+  },
+];
