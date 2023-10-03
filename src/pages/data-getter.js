@@ -237,20 +237,20 @@ const mapRaidMoves = (pokemon) => ({
 
 export const getStaticProps = async () => {
   //get type data
-  const typeJson = await getTypesFromApi()
-  await saveJsonToFile(typeJson, 'types.json')
+  // const typeJson = await getTypesFromApi()
+  // await saveJsonToFile(typeJson, 'types.json')
 
-  // get all pokemon data
-  const allPokemonJson = await getAllPokemonFromApi()
-  await saveJsonToFile(allPokemonJson, 'all_pokemon.json')
+  // // get all pokemon data
+  // const allPokemonJson = await getAllPokemonFromApi()
+  // await saveJsonToFile(allPokemonJson, 'all_pokemon.json')
 
-  // get 5* raid pokemon data
-  const fiveStarRaidPokemonJson = await getFiveStarRaidPokemonFromApi()
-  await saveJsonToFile(fiveStarRaidPokemonJson, 'five_star_raid_pokemon.json')
+  // // get 5* raid pokemon data
+  // const fiveStarRaidPokemonJson = await getFiveStarRaidPokemonFromApi()
+  // await saveJsonToFile(fiveStarRaidPokemonJson, 'five_star_raid_pokemon.json')
 
-  // get 6* raid pokemon data
-  const sixStarRaidPokemonJson = await getSixStarRaidPokemonFromApi()
-  await saveJsonToFile(sixStarRaidPokemonJson, 'six_star_raid_pokemon.json')
+  // // get 6* raid pokemon data
+  // const sixStarRaidPokemonJson = await getSixStarRaidPokemonFromApi()
+  // await saveJsonToFile(sixStarRaidPokemonJson, 'six_star_raid_pokemon.json')
 
   return {
     props: {},
