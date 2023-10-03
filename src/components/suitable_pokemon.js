@@ -23,7 +23,9 @@ const getSuitablePokemon = (targetPokemon, types, teraType) => {
   const bestAttackType =
     targetPokemon.stats.defense > targetPokemon.stats.special_defense
       ? 'special'
-      : 'physical'
+      : targetPokemon.stats.defense < targetPokemon.stats.special_defense
+      ? 'physical'
+      : 'equal'
 
   console.log(bestAttackType)
   // types that the target pokemn hits for super effective dmg
@@ -72,10 +74,9 @@ const getSuitablePokemon = (targetPokemon, types, teraType) => {
   //console.log(superEffectiveTypes)
   const superEffective = suitableWithSetup
     .filter((p) => {
-      //console.log(p.moveInfo.map(t => t.type))
       return p.moveInfo
         .filter((m) => m.class !== 'status')
-        .filter((m) => m.class === bestAttackType)
+        .filter((m) => m.class === bestAttackType || bestAttackType === 'both')
         .some((m) => superEffectiveTypes.map((t) => t.name).includes(m.type))
     })
     .map((p) => ({
@@ -129,7 +130,7 @@ const sortPowerDesc = (a, b) => {
   }
   return 0
 }
-
+//TODO: prioritise defenders that have a good match up defensively to the class of the attacker.
 const SuitablePokemon = ({ pokemon, types, teraType }) => (
   <HeadedCard headerText="Who should you pick?">
     <section className="p-4">
