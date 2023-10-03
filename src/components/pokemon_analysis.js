@@ -3,7 +3,7 @@ import Image from 'next/image'
 import StatListItem from '../components/statlistitem'
 import HeadedCard from './headed_card'
 
-const PokemonAnalysis = ({ pokemon, teraType }) => (
+const PokemonAnalysis = ({ pokemon, teraTypeName }) => (
   <HeadedCard headerText={pokemon.name}>
     <section className="p-4 flex flex-col lg:flex-row justify-center items-center gap-4 w-full">
       <section className="flex flex-row pr-4 lg:pr-24">
@@ -16,8 +16,8 @@ const PokemonAnalysis = ({ pokemon, teraType }) => (
               height="64"
             />
             <Image
-              src={`/img/${teraType.name}_type.png`}
-              alt={teraType.name}
+              src={`/img/${teraTypeName}_type.png`}
+              alt={teraTypeName}
               width="48"
               height="48"
               className="m-3"
@@ -58,7 +58,7 @@ const PokemonAnalysis = ({ pokemon, teraType }) => (
           </ul>
         </section>
       </section>
-      <section>
+      {/* <section>
         <ul className="flex flex-col items-center">
           <StatListItem label="HP" value={pokemon.stats.hp} />
           <StatListItem label="Speed" value={pokemon.stats.speed} />
@@ -73,7 +73,7 @@ const PokemonAnalysis = ({ pokemon, teraType }) => (
             value={pokemon.stats['special-attack']}
           />
         </ul>
-      </section>
+      </section> */}
     </section>
   </HeadedCard>
 )

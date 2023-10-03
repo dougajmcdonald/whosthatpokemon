@@ -21,37 +21,10 @@ export default function Home({ types, allRaidPokemon }) {
   const router = useRouter()
 
   const [targetPokemon, setTargetPokemon] = React.useState()
-  const [teraType, setTeraType] = React.useState()
 
+  // // get the route values
   const pokemonName = router.query.pokemon
   const teraTypeName = router.query.tera
-
-  const handleSelectionChange = (selectedItem) => {
-    console.log(selectedItem)
-    if (!selectedItem) {
-      setTargetPokemon(null)
-      setTeraType(null)
-      return
-    }
-    //type ActionTypes = | 'clear' | 'create-option' | 'deselect-option' | 'pop-value' | 'remove-value' | 'select-option' | 'set-value'
-    const p = allRaidPokemon.find((x) => x.id === selectedItem.id)
-    console.log(p)
-    if (p) {
-      const pokemonWithImage = {
-        ...p,
-        image: pokemonImageUrl(p.id),
-      }
-      router.push(`/?pokemon=${p.name}`, undefined, { shallow: true })
-      setTargetPokemon(pokemonWithImage)
-    }
-  }
-
-  function handleClick(type) {
-    router.push(`/?pokemon=${pokemonName}&tera=${type.name}`, undefined, {
-      shallow: true,
-    })
-    setTeraType(type)
-  }
 
   // TODO: move this to data getter
   const pokemonImageUrl = (id) => {
@@ -64,6 +37,43 @@ export default function Home({ types, allRaidPokemon }) {
     }
 
     return `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${paddedId}.png`
+  }
+
+  const getPokemon = (pokemonName) => {
+    const p = allRaidPokemon.find((x) => x.name === pokemonName)
+    if (p) {
+      const pokemonWithImage = {
+        ...p,
+        image: pokemonImageUrl(p.id),
+      }
+      setTargetPokemon(pokemonWithImage)
+    }
+  }
+
+  // if we have route values, populate the page state
+  if (pokemonName && !targetPokemon) {
+    getPokemon(pokemonName)
+  }
+
+  const handleSelectionChange = (selectedItem, type) => {
+    if (type.action === 'clear') {
+      router.push({
+        pathname: '/',
+        query: null,
+      })
+      setTargetPokemon(null)
+    } else {
+      getPokemon(selectedItem.label)
+      router.push(`/?pokemon=${selectedItem.label}`, undefined, {
+        shallow: true,
+      })
+    }
+  }
+
+  function handleClick(type) {
+    router.push(`/?pokemon=${pokemonName}&tera=${type.name}`, undefined, {
+      shallow: true,
+    })
   }
 
   const sortNameDesc = (a, b) => {
@@ -137,27 +147,22 @@ export default function Home({ types, allRaidPokemon }) {
           onChange={handleSelectionChange}
           options={prepGroupedRaidMons()}
         />
-
-        {/* <ComboBox
-          label="What Pokemon is this raid for?"
-          defaultItems={raidPokemon.sort(sortNameDesc)}
-          onSelectionChange={handleSelectionChange}
-        >
-          {item => <Item>{item.name}</Item>}
-        </ComboBox> */}
       </section>
       {targetPokemon && (
         <TeraTypeSelector types={types} handleClick={handleClick} />
       )}
 
-      {targetPokemon && teraType && (
+      {targetPokemon && teraTypeName && (
         <div>
-          <PokemonAnalysis pokemon={targetPokemon} teraType={teraType} />
+          <PokemonAnalysis
+            pokemon={targetPokemon}
+            teraTypeName={teraTypeName}
+          />
           {/* <AttackAnalysis teraType={teraType} /> */}
           <SuitablePokemon
             pokemon={targetPokemon}
             types={types}
-            teraType={teraType}
+            teraTypeName={teraTypeName}
           />
         </div>
       )}

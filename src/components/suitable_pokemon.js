@@ -19,15 +19,13 @@ const pokemonImageUrl = (id) => {
   return `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${paddedId}.png`
 }
 
-const getSuitablePokemon = (targetPokemon, types, teraType) => {
+const getSuitablePokemon = (targetPokemon, types, teraTypeName) => {
   const bestAttackType =
     targetPokemon.stats.defense > targetPokemon.stats.special_defense
       ? 'special'
-      : targetPokemon.stats.defense < targetPokemon.stats.special_defense
-      ? 'physical'
-      : 'equal'
-
-  console.log(bestAttackType)
+      : targetPokemon.stats.defense === targetPokemon.stats.special_defense
+      ? 'equal'
+      : 'physical'
   // types that the target pokemn hits for super effective dmg
   const data = targetPokemon.moves.map((m) =>
     types
@@ -41,8 +39,6 @@ const getSuitablePokemon = (targetPokemon, types, teraType) => {
   const suitable = svPokemon.filter(
     (p) => !p.types.some((t) => uniqueTypes.includes(t))
   )
-
-  console.log(suitable)
 
   // pokemon who have at least one setup move that boosts attack or special attack
   const suitableWithSetupMapped = suitable.map((p) => {
@@ -69,14 +65,15 @@ const getSuitablePokemon = (targetPokemon, types, teraType) => {
   )
 
   // pokemon who have access to moves with super effective dmg against the target
-  const superEffectiveTypes = getSuperEffective(teraType.damage_relations)
+  const superEffectiveTypes = getSuperEffective(
+    types.find((t) => t.name === teraTypeName).damage_relations
+  )
 
-  //console.log(superEffectiveTypes)
   const superEffective = suitableWithSetup
     .filter((p) => {
       return p.moveInfo
         .filter((m) => m.class !== 'status')
-        .filter((m) => m.class === bestAttackType || bestAttackType === 'both')
+        .filter((m) => m.class === bestAttackType || bestAttackType === 'equal')
         .some((m) => superEffectiveTypes.map((t) => t.name).includes(m.type))
     })
     .map((p) => ({
@@ -107,7 +104,6 @@ const getSuitablePokemon = (targetPokemon, types, teraType) => {
   // console.log("se moves", seMoves)
 
   // prioritise the moves that are super effective and hit against the weakest defence type of the target pokemon
-
   return superEffectiveStab.sort(sortNameDesc)
 }
 
@@ -131,7 +127,7 @@ const sortPowerDesc = (a, b) => {
   return 0
 }
 //TODO: prioritise defenders that have a good match up defensively to the class of the attacker.
-const SuitablePokemon = ({ pokemon, types, teraType }) => (
+const SuitablePokemon = ({ pokemon, types, teraTypeName }) => (
   <HeadedCard headerText="Who should you pick?">
     <section className="p-4">
       <section className="pb-4 text-sm text-slate-300">
@@ -150,7 +146,7 @@ const SuitablePokemon = ({ pokemon, types, teraType }) => (
         </p>
       </section>
       <ul className="grid grid-cols-2 gap-1 lg:grid-cols-4 lg:gap-4">
-        {getSuitablePokemon(pokemon, types, teraType).map((p) => (
+        {getSuitablePokemon(pokemon, types, teraTypeName).map((p) => (
           <article
             key={p.id + p.name}
             className="flex flex-col border border-gray-500 rounded-md p-2 mb-1 w-auto"
@@ -195,7 +191,7 @@ const SuitablePokemon = ({ pokemon, types, teraType }) => (
                         />
                       </div>
                       <p className="capitalize text-sm break-words">
-                        {move.name.replace('-', ' ')} {move.power}
+                        {move.name.replace('-', ' ')}
                       </p>
                     </li>
                   ))}
