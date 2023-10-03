@@ -1,5 +1,4 @@
 import React from 'react'
-import Head from 'next/head'
 import Select from 'react-select'
 import { Inter } from '@next/font/google'
 
@@ -23,8 +22,7 @@ export default function Home({ types, allRaidPokemon }) {
   const [targetPokemon, setTargetPokemon] = React.useState()
   const [teraType, setTeraType] = React.useState()
 
-  const pokemonName = router.query.pokemon
-  const teraTypeName = router.query.tera
+  const name = router.query.name
 
   const handleSelectionChange = (selectedItem) => {
     console.log(selectedItem)
@@ -34,22 +32,19 @@ export default function Home({ types, allRaidPokemon }) {
       return
     }
     //type ActionTypes = | 'clear' | 'create-option' | 'deselect-option' | 'pop-value' | 'remove-value' | 'select-option' | 'set-value'
-    const p = allRaidPokemon.find((x) => x.id === selectedItem.id)
+    const p = allRaidPokemon.find((x) => x.name === selectedItem.label)
     console.log(p)
     if (p) {
       const pokemonWithImage = {
         ...p,
         image: pokemonImageUrl(p.id),
       }
-      router.push(`/?pokemon=${p.name}`, undefined, { shallow: true })
+      router.push(`/${p.name}`)
       setTargetPokemon(pokemonWithImage)
     }
   }
 
   function handleClick(type) {
-    router.push(`/?pokemon=${pokemonName}&tera=${type.name}`, undefined, {
-      shallow: true,
-    })
     setTeraType(type)
   }
 
@@ -106,22 +101,7 @@ export default function Home({ types, allRaidPokemon }) {
   }
 
   return (
-    <Layout
-      title={
-        pokemonName
-          ? teraTypeName
-            ? `Who's that Pokemon - Raid counters for ${pokemonName} with ${teraTypeName} tera`
-            : `Who's that Pokemon - Raid counters for ${pokemonName}`
-          : `Who's that Pokemon - Find raid counters for Scarlet & Violet raids`
-      }
-      description={
-        pokemonName
-          ? teraTypeName
-            ? `Raid counters for ${pokemonName} with ${teraTypeName} tera`
-            : `Raid counters for ${pokemonName}`
-          : 'Find raid counters for Scarlet & Violet raids'
-      }
-    >
+    <Layout title="Who's that Pokemon">
       <h1 className="text-3xl mb-4">Raid helper</h1>
       <section className="my-4 text-sm text-slate-400">
         <p>

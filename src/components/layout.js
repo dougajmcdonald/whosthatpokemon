@@ -1,11 +1,12 @@
 import Head from 'next/head'
 import Nav from './nav'
 
-const Layout = ({ title, children }) => {
+const Layout = ({ title, description, children }) => {
   return (
     <div className="bg-slate-900">
       <Head>
         <title>{title}</title>
+        <meta name="description" content={description} key="desc" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Nav />
