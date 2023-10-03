@@ -237,8 +237,8 @@ const mapRaidMoves = (pokemon) => ({
 
 export const getStaticProps = async () => {
   //get type data
-  // const typeJson = await getTypesFromApi()
-  // await saveJsonToFile(typeJson, 'types.json')
+  const typeJson = await getTypesFromApi()
+  await saveJsonToFile(typeJson, 'types.json')
 
   // // get all pokemon data
   // const allPokemonJson = await getAllPokemonFromApi()
