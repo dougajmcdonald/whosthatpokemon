@@ -19,9 +19,15 @@ const pokemonImageUrl = (id) => {
   return `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${paddedId}.png`
 }
 
-const getSuitablePokemon = (moves, types, teraType) => {
+const getSuitablePokemon = (targetPokemon, types, teraType) => {
+  const bestAttackType =
+    targetPokemon.stats.defense > targetPokemon.stats.special_defense
+      ? 'special'
+      : 'physical'
+
+  console.log(bestAttackType)
   // types that the target pokemn hits for super effective dmg
-  const data = moves.map((m) =>
+  const data = targetPokemon.moves.map((m) =>
     types
       .find((t) => t.name === m.type)
       ?.damage_relations.double_damage_to.map((ddt) => ddt.name)
@@ -62,12 +68,14 @@ const getSuitablePokemon = (moves, types, teraType) => {
 
   // pokemon who have access to moves with super effective dmg against the target
   const superEffectiveTypes = getSuperEffective(teraType.damage_relations)
+
   //console.log(superEffectiveTypes)
   const superEffective = suitableWithSetup
     .filter((p) => {
       //console.log(p.moveInfo.map(t => t.type))
       return p.moveInfo
         .filter((m) => m.class !== 'status')
+        .filter((m) => m.class === bestAttackType)
         .some((m) => superEffectiveTypes.map((t) => t.name).includes(m.type))
     })
     .map((p) => ({
@@ -75,13 +83,14 @@ const getSuitablePokemon = (moves, types, teraType) => {
       seMoves: p.moveInfo.filter(
         (m) =>
           superEffectiveTypes.map((t) => t.name).includes(m.type) &&
+          m.power > 80 &&
           m.class !== 'status'
       ),
       seStabMoves: p.moveInfo.filter(
         (m) =>
           superEffectiveTypes.map((t) => t.name).includes(m.type) &&
           m.class !== 'status' &&
-          m.power > 40 &&
+          m.power > 80 &&
           p.types.includes(m.type)
       ),
     }))
@@ -131,19 +140,16 @@ const SuitablePokemon = ({ pokemon, types, teraType }) => (
         </p>
         <p className="pb-2">
           The moves listed will deal Super-effective damage to the raid Pokemon
-          so make sure you have some of these in your build.
+          and focus on attacks which exploit the target Pokemon&apos;s weakest
+          defence. so make sure you have some of these in your build.
         </p>
-        <p className="pb-2">
-          In the future we hope to be able to recommend builds based on access
-          to suitable defensive moves and buffs.
-        </p>
-        <p className="pb-2">
-          6* raid Pokemon are level 90, make sure your Pokemon is over level 90,
-          ideally level 100.
+        <p>
+          Pokemon without any setup moves are excluded. For 6* raids, not having
+          any setup moves makes things really hard work.
         </p>
       </section>
-      <ul className="grid grid-cols-2 gap-1">
-        {getSuitablePokemon(pokemon.moveInfo, types, teraType).map((p) => (
+      <ul className="grid grid-cols-2 gap-1 lg:grid-cols-4 lg:gap-4">
+        {getSuitablePokemon(pokemon, types, teraType).map((p) => (
           <article
             key={p.id + p.name}
             className="flex flex-col border border-gray-500 rounded-md p-2 mb-1 w-auto"
@@ -174,7 +180,8 @@ const SuitablePokemon = ({ pokemon, types, teraType }) => (
               </section>
 
               <section className="mb-4">
-                <ul>
+                <p className="text-xs font-bold">Super-effective Attacks</p>
+                <ul className="mt-4">
                   {p.seStabMoves.sort(sortPowerDesc).map((move) => (
                     <li key={move.name} className="flex flex-row mb-1">
                       <div>
@@ -187,7 +194,7 @@ const SuitablePokemon = ({ pokemon, types, teraType }) => (
                         />
                       </div>
                       <p className="capitalize text-sm break-words">
-                        {move.name.replace('-', ' ')}
+                        {move.name.replace('-', ' ')} {move.power}
                       </p>
                     </li>
                   ))}
@@ -195,7 +202,7 @@ const SuitablePokemon = ({ pokemon, types, teraType }) => (
               </section>
               <hr />
               <section className="mt-4">
-                <p className="text-xs font-bold">Setup</p>
+                <p className="text-xs font-bold">Setup moves</p>
                 <ul className="mt-4">
                   {p.setupMoves.map((move) => (
                     <li key={move.name} className="flex flex-row mb-1">
