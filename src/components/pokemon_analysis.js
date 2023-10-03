@@ -57,20 +57,22 @@ const PokemonAnalysis = ({ pokemon, teraType }) => (
         </ul>
       </section>
     </section>
-    {/* <ul className="p-4 flex flex-col items-center">
-      <StatListItem label="HP" value={pokemon.stats.hp} />
-      <StatListItem label="Speed" value={pokemon.stats.speed} />
-      <StatListItem label="Defence" value={pokemon.stats.defense} />
-      <StatListItem
-        label="Special Defence"
-        value={pokemon.stats["special-defense"]}
-      />
-      <StatListItem label="Attack" value={pokemon.stats.attack} />
-      <StatListItem
-        label="Special Attack"
-        value={pokemon.stats["special-attack"]}
-      />
-    </ul> */}
+    {
+      <ul className="p-4 flex flex-col items-center">
+        <StatListItem label="HP" value={pokemon.stats.hp} />
+        <StatListItem label="Speed" value={pokemon.stats.speed} />
+        <StatListItem label="Defence" value={pokemon.stats.defense} />
+        <StatListItem
+          label="Special Defence"
+          value={pokemon.stats['special-defense']}
+        />
+        <StatListItem label="Attack" value={pokemon.stats.attack} />
+        <StatListItem
+          label="Special Attack"
+          value={pokemon.stats['special-attack']}
+        />
+      </ul>
+    }
   </HeadedCard>
 )
 

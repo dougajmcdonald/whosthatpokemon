@@ -164,6 +164,7 @@ const appendMoveData = async (pokemon, movesProperty) => {
         power: m.power,
         type: m.type.name,
         class: m.damage_class.name,
+        stat_changes: m.stat_changes,
       })),
     })
     //console.log(element.name, " done.")

@@ -34,10 +34,36 @@ const getSuitablePokemon = (moves, types, teraType) => {
     (p) => !p.types.some((t) => uniqueTypes.includes(t))
   )
 
+  console.log(suitable)
+
+  // pokemon who have at least one setup move that boosts attack or special attack
+  const suitableWithSetupMapped = suitable.map((p) => {
+    const setupMoves = p.moveInfo.filter(
+      (mi) =>
+        mi.class === 'status' &&
+        mi.stat_changes &&
+        mi.stat_changes.length > 0 &&
+        mi.stat_changes.some(
+          (sc) =>
+            (sc.stat.name === 'attack' || sc.stat.name === 'special-attack') &&
+            parseInt(sc.change, 10) > 0
+        )
+    )
+
+    return {
+      ...p,
+      setupMoves,
+    }
+  })
+
+  const suitableWithSetup = suitableWithSetupMapped.filter(
+    (x) => x.setupMoves.length > 0
+  )
+
   // pokemon who have access to moves with super effective dmg against the target
   const superEffectiveTypes = getSuperEffective(teraType.damage_relations)
   //console.log(superEffectiveTypes)
-  const superEffective = suitable
+  const superEffective = suitableWithSetup
     .filter((p) => {
       //console.log(p.moveInfo.map(t => t.type))
       return p.moveInfo
@@ -147,9 +173,31 @@ const SuitablePokemon = ({ pokemon, types, teraType }) => (
                 </ul>
               </section>
 
-              <section>
+              <section className="mb-4">
                 <ul>
                   {p.seStabMoves.sort(sortPowerDesc).map((move) => (
+                    <li key={move.name} className="flex flex-row mb-1">
+                      <div>
+                        <Image
+                          src={`/img/${move.type}_type.png`}
+                          alt={move.type}
+                          width={24}
+                          height={24}
+                          className="mr-2"
+                        />
+                      </div>
+                      <p className="capitalize text-sm break-words">
+                        {move.name.replace('-', ' ')}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+              <hr />
+              <section className="mt-4">
+                <p className="text-xs font-bold">Setup</p>
+                <ul className="mt-4">
+                  {p.setupMoves.map((move) => (
                     <li key={move.name} className="flex flex-row mb-1">
                       <div>
                         <Image
