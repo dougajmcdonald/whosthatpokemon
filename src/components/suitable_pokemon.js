@@ -20,7 +20,6 @@ const pokemonImageUrl = (id) => {
 }
 
 const getSuitablePokemon = (targetPokemon, types, teraTypeName) => {
-  console.log(targetPokemon)
   const bestAttackType =
     targetPokemon.stats.defense > targetPokemon.stats.special_defense
       ? 'special'
