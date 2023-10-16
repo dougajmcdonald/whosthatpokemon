@@ -1085,7 +1085,6 @@ export const svPokedexFinalEvolutions = [
   { id: 'chimecho', name: 'chimecho' },
   { id: 'magcargo', name: 'magcargo' },
   { id: 'chandelure', name: 'chandelure' },
-  { id: 'masquerain', name: 'masquerain' },
   { id: 'clefable', name: 'clefable' },
   { id: 'milotic', name: 'milotic' },
   { id: 'eelektross', name: 'eelektross' },

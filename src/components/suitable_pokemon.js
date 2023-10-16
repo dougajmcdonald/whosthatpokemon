@@ -20,6 +20,7 @@ const pokemonImageUrl = (id) => {
 }
 
 const getSuitablePokemon = (targetPokemon, types, teraTypeName) => {
+  console.log(targetPokemon)
   const bestAttackType =
     targetPokemon.stats.defense > targetPokemon.stats.special_defense
       ? 'special'
@@ -27,7 +28,7 @@ const getSuitablePokemon = (targetPokemon, types, teraTypeName) => {
       ? 'equal'
       : 'physical'
   // types that the target pokemn hits for super effective dmg
-  const data = targetPokemon.moves.map((m) =>
+  const data = targetPokemon.moveInfo.map((m) =>
     types
       .find((t) => t.name === m.type)
       ?.damage_relations.double_damage_to.map((ddt) => ddt.name)
